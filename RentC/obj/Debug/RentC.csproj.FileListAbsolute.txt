@@ -1,0 +1,7 @@
+C:\Users\Stefan\source\repos\RentC\RentC\bin\Debug\RentC.exe.config
+C:\Users\Stefan\source\repos\RentC\RentC\bin\Debug\RentC.exe
+C:\Users\Stefan\source\repos\RentC\RentC\bin\Debug\RentC.pdb
+C:\Users\Stefan\source\repos\RentC\RentC\obj\Debug\RentC.csprojAssemblyReference.cache
+C:\Users\Stefan\source\repos\RentC\RentC\obj\Debug\RentC.csproj.CoreCompileInputs.cache
+C:\Users\Stefan\source\repos\RentC\RentC\obj\Debug\RentC.exe
+C:\Users\Stefan\source\repos\RentC\RentC\obj\Debug\RentC.pdb
