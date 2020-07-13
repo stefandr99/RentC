@@ -46,10 +46,12 @@
     <Compile Include="Controllers\CarController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\ReservationController.cs" />
+    <Compile Include="Entities\User.cs" />
     <Compile Include="Models\CarModel.cs" />
     <Compile Include="Models\CouponModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\ReservationModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Util\DbConnection.cs" />
     <Compile Include="Entities\Car.cs" />
     <Compile Include="Entities\Coupon.cs" />

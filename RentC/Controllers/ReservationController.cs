@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RentC.Entities;
 
 namespace RentC.Controllers
 {
@@ -16,6 +17,7 @@ namespace RentC.Controllers
         public CarModel carModel { get; }
         public CustomerModel customerModel { get; }
         public CouponModel couponModel { get; }
+
         public ReservationController()
         {
             db = DbConnection.getInstance;
@@ -43,11 +45,11 @@ namespace RentC.Controllers
             string format = "dd/MM/yyyy";
             DateTime sDate, eDate;
             if (!DateTime.TryParseExact(startDate, format, new CultureInfo("en-US"),
-                                DateTimeStyles.None, out sDate))
+                DateTimeStyles.None, out sDate))
                 return "The start date you have entered is not valid! Please enter another one!";
 
             if (!DateTime.TryParseExact(endDate, format, new CultureInfo("en-US"),
-                                DateTimeStyles.None, out eDate))
+                DateTimeStyles.None, out eDate))
                 return "The end date you have entered is not valid! Please enter another one!";
 
             if (DateTime.Compare(sDate, eDate) > 0)
@@ -55,10 +57,16 @@ namespace RentC.Controllers
 
             string coupon = couponModel.getCoupon(db);
 
-            if(!reservationModel.registerCarRent(new Entities.Reservation(carId, customerId, sDate, eDate, city, coupon), db))
+            if (!reservationModel.registerCarRent(
+                new Reservation(carId, customerId, sDate, eDate, city, coupon), db))
                 return "A problem has occured when trying to register! Please try again!";
 
             return "You have been successfully registered!";
         }
+
+        public List<Reservation> list(int orderBy, string ascendent) {
+            return reservationModel.listReservations(orderBy, ascendent, db);
+        }
+
     }
 }

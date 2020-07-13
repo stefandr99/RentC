@@ -36,5 +36,9 @@ namespace RentC.Entities
             this.endDate = endDate;
             this.location = location;
         }
+
+        public override string ToString() {
+            return carId + "   " + customerId + "   " + startDate + "   " + endDate + "   " + location + Environment.NewLine;
+        }
     }
 }

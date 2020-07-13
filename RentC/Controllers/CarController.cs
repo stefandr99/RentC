@@ -13,15 +13,29 @@ namespace RentC.Controllers
     {
         public DbConnection db { get; }
         public CarModel carModel;
+
         public CarController()
         {
             db = DbConnection.getInstance;
             carModel = new CarModel();
         }
-        public List<Car> list()
+
+        public List<Car> list(int orderBy, string ascendent)
         {
-            return carModel.listAvailableCars(db);
+            return carModel.listAvailableCars(orderBy, ascendent, db);
         }
 
+        public List<Car> listMostRecentCars() {
+            return carModel.listMostRecentCars(db);
+        }
+
+        public List<Tuple<int, Car>> listMostRentedByMonth(int month, int year)
+        {
+            return carModel.listMostRentedCarsByMonth(month, year, db);
+        }
+
+        public List<Tuple<int, Car>> listLessRentedByMonth(int month, int year) {
+            return carModel.listLessRentedCarsByMonth(month, year, db);
+        }
     }
 }

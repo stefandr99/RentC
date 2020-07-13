@@ -24,5 +24,9 @@ namespace RentC.Entities
             this.pricePerDay = pricePerDay;
             this.city = city;
         }
+
+        public override string ToString() {
+            return carId + "   " + plate + "   " + manufacturer + "   " + model + "   " + pricePerDay + "   " + city + Environment.NewLine;
+        }
     }
 }

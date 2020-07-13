@@ -14,7 +14,10 @@ namespace RentC.Entities
         public string location { get; set; }
         public string ZIPCode { get; set; }
 
-        public Customer() { }
+        public Customer()
+        {
+        }
+
         public Customer(int customerId, string name, System.DateTime birthDate, string location, string ZIPCode)
         {
             this.customerId = customerId;
@@ -37,6 +40,10 @@ namespace RentC.Entities
             this.name = name;
             this.birthDate = birthDate;
             this.ZIPCode = ZIPCode;
+        }
+
+        public override string ToString() {
+            return customerId + "   " + name + "   " + birthDate + "   " + location + "   " + ZIPCode + Environment.NewLine;
         }
     }
 }
