@@ -36,11 +36,12 @@ namespace RentC.Models
             }
         }
 
-        public bool verifyReservation(int customerId, DbConnection db) {
-            string query = "SELECT CustomerID FROM Reservations where CustomerID = @customerId and ReservStatsID = 1";
+        public bool verifyReservation(int identifyId, DbConnection db) {
+            string query = "SELECT CustomerID FROM Reservations WHERE (CustomerID = @identifyId OR CarID = @identifyId) " +
+                           "and ReservStatsID = 1";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
-                command.Parameters.AddWithValue("@customerId", customerId);
+                command.Parameters.AddWithValue("@customerId", identifyId);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     db.getDbConnection().Close();
@@ -75,12 +76,11 @@ namespace RentC.Models
         /**
          * Could change status depending of CarID or CustomerID
          */
-        public bool changeReservationStatus(int identifyId, int status, DbConnection db) {
-            string query = "UPDATE Reservation SET ReservStatsID = @status where CarID = @id OR CustomerID = @id";
+        public bool cancelReservation(int identifyId,  DbConnection db) {
+            string query = "UPDATE Reservation SET ReservStatsID = 3 where CarID = @id OR CustomerID = @id";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@status", status);
                 command.Parameters.AddWithValue("@id", identifyId);
 
                 db.getDbConnection().Open();

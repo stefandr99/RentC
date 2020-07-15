@@ -25,6 +25,15 @@ namespace RentC.Entities
             this.city = city;
         }
 
+        public Car(string plate, string manufacturer, string model, decimal pricePerDay, string city)
+        {
+            this.plate = plate;
+            this.manufacturer = manufacturer;
+            this.model = model;
+            this.pricePerDay = pricePerDay;
+            this.city = city;
+        }
+
         public override string ToString() {
             return carId + "   " + plate + "   " + manufacturer + "   " + model + "   " + pricePerDay + "   " + city + Environment.NewLine;
         }

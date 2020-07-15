@@ -68,5 +68,18 @@ namespace RentC.Controllers
             return reservationModel.listReservations(orderBy, ascendent, db);
         }
 
+        public string cancelReservation(int identifyId) {
+            if (!reservationModel.verifyReservation(identifyId, db))
+                return "This reservation does not exist or it isn't open!";
+            if (!reservationModel.cancelReservation(identifyId, db))
+                return "A problem occured when you tried to cancel th reservation!";
+            return "Reservation cancelled with success!";
+        }
+
+        public string expiredReservations() {
+            if (!reservationModel.expiredReservations(db))
+                return "A problem occured when we tried to update the reservations!";
+            return "Reservations has been updated!";
+        }
     }
 }

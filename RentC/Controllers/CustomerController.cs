@@ -80,6 +80,20 @@ namespace RentC.Controllers
             return "Your profile have been successfully updated!";
         }
 
+        public string removeCustomer(int customerId) {
+            int result = customerModel.removeCustomer(customerId, db);
+            switch (result) {
+                case 1:
+                    return "Customer removed with success!";
+                case 2:
+                    return "You do not have permission to do this!";
+                case 3:
+                    return "This customer does not exist!";
+                default:
+                    return "";
+            }
+        }
+
         public List<Customer> list(int orderBy, string ascendent)
         {
             return customerModel.listCustomers(orderBy, ascendent, db);

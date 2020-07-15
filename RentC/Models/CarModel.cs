@@ -11,12 +11,33 @@ namespace RentC.Models
 {
     public class CarModel
     {
-        public bool register(Car car, DbConnection db) {
-            string query = "INSERT INTO Cars VALUES (@carId, @plate, @manufacturer, @model, @pricePerDay, @city)";
+        /**
+         * 0 = Database error;
+         * 1 = Success;
+         * 2 = There is already a car with this plate in this city;
+         */
+        public int register(Car car, DbConnection db) {
+            string query = "SELECT CarID FROM Cars WHERE Plate = @plate and City = @city";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@carId", car.carId);
+                command.Parameters.AddWithValue("@plate", car.plate);
+                command.Parameters.AddWithValue("@city", car.city);
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows) {
+                        return 2;
+                    }
+                    db.getDbConnection().Close();
+                }
+            }
+
+
+            query = "INSERT INTO Cars VALUES (@plate, @manufacturer, @model, @pricePerDay, @city)";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
                 command.Parameters.AddWithValue("@plate", car.plate);
                 command.Parameters.AddWithValue("@manufacturer", car.manufacturer);
                 command.Parameters.AddWithValue("@model", car.model);
@@ -24,7 +45,7 @@ namespace RentC.Models
                 command.Parameters.AddWithValue("@city", car.city);
 
                 db.getDbConnection().Open();
-                bool result = command.ExecuteNonQuery() > 0;
+                int result = command.ExecuteNonQuery();
                 db.getDbConnection().Close();
 
                 return result;
@@ -55,7 +76,8 @@ namespace RentC.Models
         }
 
         public List<Car> listAvailableCars(int orderBy, string ascendent, DbConnection db) {
-            string query = "SELECT c.* FROM Cars c LEFT JOIN Reservations r ON c.CarID = r.CarID ORDER BY " + orderBy +
+            string query = "SELECT DISTINCT c.CarID, c.Plate, c.Manufacturer, c.Model, c.PricePerDay, c.City FROM Cars c " +
+                           "JOIN Reservations r ON c.CarID = r.CarID WHERE r.ReservStatsID in (2, 3) ORDER BY " + orderBy +
                            " " + ascendent;
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
@@ -78,7 +100,7 @@ namespace RentC.Models
 
         public List<Car> listMostRecentCars(DbConnection db) {
             string query =
-                "SELECT TOP(10) c.* FROM Cars c RIGHT JOIN Reservations r ON c.CarID = r.CarID ORDER BY r.StartDate ASC";
+                "SELECT TOP(10) c.* FROM Cars c JOIN Reservations r ON c.CarID = r.CarID ORDER BY r.StartDate DESC";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
                 db.getDbConnection().Open();

@@ -46,6 +46,7 @@
     <Compile Include="Controllers\CarController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\ReservationController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Models\CarModel.cs" />
     <Compile Include="Models\CouponModel.cs" />

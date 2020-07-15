@@ -100,18 +100,17 @@ namespace RentC.Models
          * 1 = Success!
          * 2 = You don't have the permission to do this.
          * 3 = This customer doesn't exist.
-         * De verificat aici, nu stiu daca merge cu amandoua
          */
-        public int removeCustomer(string toDelete, DbConnection db)
+        public int removeCustomer(int customerId, DbConnection db)
         {
             if (User.roleId != 1 && User.roleId != 2)
                 return 2;
 
-            string query = "DELETE FROM Customer WHERE CustomerID = @toDelete OR Name = @toDelete";
+            string query = "DELETE FROM Customer WHERE CustomerID = @id";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@toDelete", toDelete);
+                command.Parameters.AddWithValue("@id", customerId);
 
                 db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;
