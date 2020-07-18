@@ -26,12 +26,13 @@ namespace RentC.Controllers
 
             if (!int.TryParse(userId, out int id))
                 return Response.INCORRECT_ID;
+            int res = userModel.authUser(id, password, db);
+            return res == 0
+                ? Response.INCORRECT_CREDENTIALS
+                : (res == 1
+                    ? Response.SUCCESS_ADMIN
+                    : (res == 2 ? Response.SUCCESS_MANAGER : Response.SUCCESS_SALESPERSON));
 
-            if (!userModel.authUser(id, password, db)) {
-                return Response.INCORRECT_CREDENTIALS;
-            }
-
-            return Response.SUCCESS;
         }
 
         public Response changePassword(string userId, string oldPass, string newPass1, string newPass2) {
@@ -50,17 +51,30 @@ namespace RentC.Controllers
             return Response.SUCCESS;
         }
 
-        public Response registerSaleperson(string userId, string password) {
-            if (userId.Equals("") || password.Equals(""))
-            {
+        public Response registerSaleperson(string password) {
+            if (password.Equals("")) {
+                return Response.UNFILLED_FIELDS;
+            }
+
+            if (!userModel.registerSaleperson(new User(password), db))
+                return Response.DATABASE_ERROR;
+            return Response.SUCCESS;
+        }
+
+        public Response enableUser(string userId)
+        {
+            if (userId.Equals("")) {
                 return Response.UNFILLED_FIELDS;
             }
 
             if (!int.TryParse(userId, out int id))
                 return Response.INCORRECT_ID;
 
-            if (!userModel.registerSaleperson(new User(id, password), db))
+            if (!userModel.enableUser(id, db))
+            {
                 return Response.DATABASE_ERROR;
+            }
+
             return Response.SUCCESS;
         }
 

@@ -9,12 +9,35 @@ using RentC.Entities;
 
 namespace RentC.Util
 {
-    public class UserInteraction<T>
+    public class UserInteraction
     {
         private Controller controller { get; }
         private Response response { get; set; }
         public UserInteraction() {
             controller = new Controller();
+        }
+
+        public void start() {
+            Console.WriteLine("Welcome to RentC, your brand new solution to manage and control your company's data " +
+                              "without missing anything.");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("\t\t\t\tPress ENTER to continue or ESC to quit.");
+
+            ConsoleKeyInfo keyInfo;
+            while (true)
+            {
+                keyInfo = Console.ReadKey();
+                if (keyInfo.Key == ConsoleKey.Enter)
+                    break;
+                if (keyInfo.Key == ConsoleKey.Escape)
+                    System.Environment.Exit(0);
+            }
+
+            authUser();
         }
 
         public void registerCustomer() {
@@ -157,16 +180,21 @@ namespace RentC.Util
                 string pass = Console.ReadLine();
 
                 response = controller.user.authUser(userId, pass);
-                if (response == Response.SUCCESS_ADMIN)
-                    adminSession();
-                else if (response == Response.SUCCESS_MANAGER)
-                    managerSession();
-                else if (response == Response.SUCCESS_SALESPERSON)
-                    salespersonSession();
-                else getMessage(response);
+
+                if (response != Response.SUCCESS_ADMIN && response != Response.SUCCESS_MANAGER &&
+                    response != Response.SUCCESS_SALESPERSON) {
+                    getMessage(response);
+                }
+                else break;
 
                 Thread.Sleep(300);
             }
+            if (response == Response.SUCCESS_ADMIN)
+                adminSession();
+            else if (response == Response.SUCCESS_MANAGER)
+                managerSession();
+            else if (response == Response.SUCCESS_SALESPERSON)
+                salespersonSession();
         }
 
         public void changePassword()
@@ -190,14 +218,25 @@ namespace RentC.Util
 
         public void registerSaleperson()
         {
-            Console.Write("Salesperson Id: ");
-            string id = Console.ReadLine();
             Console.Write("Password: ");
             string pass = Console.ReadLine();
 
-            response = controller.user.registerSaleperson(id, pass);
+            response = controller.user.registerSaleperson(pass);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Salesperson registered with success.");
+            else getMessage(response);
+
+            Thread.Sleep(300);
+        }
+
+        public void enableUser()
+        {
+            Console.Write("User Id: ");
+            string id = Console.ReadLine();
+
+            response = controller.user.enableUser(id);
+            if (response == Response.SUCCESS)
+                Console.WriteLine("User enabled with success.");
             else getMessage(response);
 
             Thread.Sleep(300);
@@ -216,7 +255,7 @@ namespace RentC.Util
             Thread.Sleep(300);
         }
 
-        public void printList(List<T> list) {
+        public void printList<T>(List<T> list) where T: class{
             foreach (var t in list) {
                 Console.WriteLine(t.ToString());
             }
@@ -243,7 +282,8 @@ namespace RentC.Util
                                   "10. List reservations" + Environment.NewLine + "11. List cars" + Environment.NewLine +
                                   "12. List users" + Environment.NewLine + "13. Change password" + Environment.NewLine + 
                                   "14. Register salesperson" + Environment.NewLine +
-                                  "15. Disable User" + Environment.NewLine + "16. Exit" + Environment.NewLine);
+                                  "15. Disable User" + Environment.NewLine + "16. Enable User" + Environment.NewLine + 
+                                  "17. Exit" + Environment.NewLine);
                 string respLine = Console.ReadLine();
                 switch (respLine) {
                     case "1": {
@@ -308,6 +348,10 @@ namespace RentC.Util
                         break;
                     }
                     case "16": {
+                        enableUser();
+                        break;
+                    }
+                    case "17": {
                         System.Environment.Exit(0);
                         break;
                     }
@@ -433,48 +477,48 @@ namespace RentC.Util
             }
         }
 
-        public string getMessage(Response response)
+        public void getMessage(Response response)
         {
             switch (response)
             {
                 case Response.DATABASE_ERROR:
-                    return "A problem has occured! Please try again!";
+                    {Console.WriteLine("A problem has occured! Please try again!"); break;}
                 case Response.ALREADY_CAR:
-                    return "This car already exists in this city.";
+                    {Console.WriteLine("This car already exists in this city."); break;}
                 case Response.UNFILLED_FIELDS:
-                    return "Please fill all fields!";
+                    {Console.WriteLine("Please fill all fields!"); break;}
                 case Response.INCORRECT_CREDENTIALS:
-                    return "Username or password incorrect. Please try again!";
+                    {Console.WriteLine("Username or password incorrect. Please try again!"); break;}
                 case Response.INCORRECT_OLD_PASS:
-                    return "You have entered a wrong old password. Please try again!";
+                    {Console.WriteLine("You have entered a wrong old password. Please try again!"); break;}
                 case Response.INVALID_DATE:
-                    return "The date is in invalid format. Please enter a valid one!";
+                    {Console.WriteLine("The date is in invalid format. Please enter a valid one!"); break;}
                 case Response.INVALID_ZIP:
-                    return "You have entered an invalid zip code.";
+                    {Console.WriteLine("You have entered an invalid zip code."); break;}
                 case Response.INVERSED_DATES:
-                    return "Start Date cannot be later than End Date";
+                    {Console.WriteLine("Start Date cannot be later than End Date"); break;}
                 case Response.IREAL_BIRTH:
-                    return "You cannot be born on this day. Please enter a real one!";
+                    {Console.WriteLine("You cannot be born on this day. Please enter a real one!"); break;}
                 case Response.INEXISTENT_CAR:
-                    return "This car does not exist.";
+                    {Console.WriteLine("This car does not exist."); break;}
                 case Response.INEXISTENT_CUSTOMER:
-                    return "This customer does not exist.";
+                    {Console.WriteLine("This customer does not exist."); break;}
                 case Response.INEXISTENT_RESERVATION:
-                    return "This reservation does not exist or it is not open.";
+                    {Console.WriteLine("This reservation does not exist or it is not open."); break;}
                 case Response.UNAVAILABLE_CAR:
-                    return "This car is not available at the moment.";
+                    {Console.WriteLine("This car is not available at the moment."); break;}
                 case Response.UNAVAILABLE_CAR_IN_CITY:
-                    return "This car is not available in this city";
+                    {Console.WriteLine("This car is not available in this city"); break;}
                 case Response.INCORRECT_ID:
-                    return "This id is not correct. Please try again!";
+                    {Console.WriteLine("This id is not correct. Please try again!"); break;}
                 case Response.NOT_MATCH_PASS:
-                    return "Passwords do not match.";
+                    {Console.WriteLine("Passwords do not match."); break;}
                 case Response.INCORRECT_PRICE:
-                    return "The price has incorrect format. Please write a correct one!";
+                    {Console.WriteLine("The price has incorrect format. Please write a correct one!"); break;}
                 case Response.INCORRECT_SDATE:
-                    return "Start date cannot be earlier than present. Please enter a correct date";
+                    {Console.WriteLine("Start date cannot be earlier than present. Please enter a correct date"); break;}
                 default:
-                    return "";
+                    {Console.WriteLine(""); break;}
             }
         }
     }

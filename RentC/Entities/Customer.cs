@@ -42,7 +42,8 @@ namespace RentC.Entities
         }
 
         public override string ToString() {
-            return customerId + "   " + name + "   " + birthDate + "   " + location + "   " + ZIPCode;
+            return "Customer " + customerId + ": " + name + "   birth date:" + birthDate + 
+                   (location.Equals("") ?  "" : "   location: " +location) + (ZIPCode.Equals("") ? "" : "   ZIPCode" + ZIPCode);
         }
     }
 }

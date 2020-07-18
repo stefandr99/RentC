@@ -11,7 +11,7 @@ namespace RentC.Models
 {
     public class UserModel
     {
-        public bool authUser(int userId, string password, DbConnection db) {
+        public int authUser(int userId, string password, DbConnection db) {
             string query = "SELECT Password, RoleID FROM Users where UserID = @userId and Enabled = 1";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
@@ -23,13 +23,13 @@ namespace RentC.Models
                     if (reader.HasRows)
                         if (reader.Read()) {
                             if (password.Equals(reader.GetString(0))) {
-                                User.roleId = reader.GetInt32(1);
+                                int res = reader.GetInt32(1);
                                 db.getDbConnection().Close();
-                                return true;
+                                return res;
                             }
                         }
                     db.getDbConnection().Close();
-                    return false;
+                    return 0;
                 }
             }
         }
@@ -66,15 +66,29 @@ namespace RentC.Models
         }
 
         public bool registerSaleperson(User user, DbConnection db) {
-            string query = "INSERT INTO Users VALUES (@id, @password, @enabled, @roleId)";
+            string query = "INSERT INTO Users VALUES (@password, @enabled, @roleId)";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@id", user.userId);
                 command.Parameters.AddWithValue("@password", user.password);
-                command.Parameters.AddWithValue("@enabled", user.enabled);
+                command.Parameters.AddWithValue("@enabled", false);
                 command.Parameters.AddWithValue("@roleId", 3);
 
+                db.getDbConnection().Open();
+                bool result = command.ExecuteNonQuery() > 0;
+                db.getDbConnection().Close();
+
+                return result;
+            }
+        }
+
+        public bool enableUser(int userId, DbConnection db)
+        {
+            string query = "UPDATE Users SET Enabled = 1 where UserID = @userId";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                command.Parameters.AddWithValue("@userId", userId);
                 db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;
                 db.getDbConnection().Close();
@@ -89,7 +103,7 @@ namespace RentC.Models
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
                 command.Parameters.AddWithValue("@userId", userId);
-
+                db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;
                 db.getDbConnection().Close();
 
@@ -112,7 +126,7 @@ namespace RentC.Models
                         while (reader.Read())
                         {
                             User user = new User(reader.GetInt32(0), reader.GetString(1), 
-                                reader.GetInt32(2), reader.GetInt32(3));
+                                reader.GetBoolean(2), reader.GetInt32(3));
                             users.Add(user);
                         }
                     }

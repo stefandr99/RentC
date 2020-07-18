@@ -74,7 +74,7 @@ namespace RentC.Models
         }
 
         public List<Reservation> listReservations(int orderBy, string ascendent, DbConnection db) {
-            string query = "SELECT * FROM Reservation where ReservStatsID = 1 ORDER BY " + orderBy + " " + ascendent;
+            string query = "SELECT * FROM Reservations where ReservStatsID = 1 ORDER BY " + orderBy + " " + ascendent;
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
                 db.getDbConnection().Open();
@@ -83,7 +83,7 @@ namespace RentC.Models
                     if (reader.HasRows) {
                         while (reader.Read()) {
                             Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1),
-                                reader.GetDateTime(2), reader.GetDateTime(3), reader.GetString(4));
+                                reader.GetDateTime(3), reader.GetDateTime(4), reader.GetString(5));
                             reservations.Add(reservation);
                         }
                     }

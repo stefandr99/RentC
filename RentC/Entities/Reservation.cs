@@ -44,7 +44,7 @@ namespace RentC.Entities
         }
 
         public override string ToString() {
-            return carId + "   " + customerId + "   " + startDate + "   " + endDate + "   " + location;
+            return "Car " + carId + "   customer " + customerId + "   start date: " + startDate + "   end date:" + endDate + "   city: " + location;
         }
     }
 }

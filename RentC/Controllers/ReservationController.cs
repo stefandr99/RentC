@@ -57,7 +57,7 @@ namespace RentC.Controllers
             if (DateTime.Compare(sDate, eDate) > 0)
                 return Response.INVERSED_DATES;
 
-            if (DateTime.Compare(sDate, DateTime.Now) > 0)
+            if (DateTime.Compare(sDate, DateTime.Now) < 0)
                 return Response.INCORRECT_SDATE;
 
             string coupon = couponModel.getCoupon(db);
