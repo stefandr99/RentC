@@ -1,4 +1,4 @@
-﻿using RentC.Db;
+﻿using RentC.Util;
 using RentC.Entities;
 using System;
 using System.Collections.Generic;
@@ -14,12 +14,11 @@ namespace RentC.Models
         public bool registerCustomer(Customer customer, DbConnection db)
         {
             string query = customer.ZIPCode.Equals("")
-                ? "INSERT INTO Customers (CustomerID, Name, BirthDate) VALUES (@id, @name, @bdate)"
-                : "INSERT INTO Customers (CustomerID, Name, BirthDate, ZIPCode) VALUES (@id, @name, @bdate, @zip)";
+                ? "INSERT INTO Customers (Name, BirthDate) VALUES (@name, @bdate)"
+                : "INSERT INTO Customers (Name, BirthDate, ZIPCode) VALUES (@name, @bdate, @zip)";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@id", customer.customerId);
                 command.Parameters.AddWithValue("@name", customer.name);
                 command.Parameters.AddWithValue("@bdate", customer.birthDate);
                 if (!customer.ZIPCode.Equals(""))
@@ -35,7 +34,7 @@ namespace RentC.Models
 
         public bool updateCustomer(Customer customer, DbConnection db)
         {
-            string query = "UPDATE Customers SET CustomerID = @id, Name = @name, BirthDate = @bdate, ZIPCode = @zip";
+            string query = "UPDATE Customers SET Name = @name, BirthDate = @bdate, ZIPCode = @zip WHERE CustomerID = @id";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
@@ -67,7 +66,7 @@ namespace RentC.Models
                         while (reader.Read())
                         {
                             Customer customer = new Customer(reader.GetInt32(0), reader.GetString(1),
-                                reader.GetDateTime(2), reader.GetString(3), reader.GetString(4));
+                                reader.GetDateTime(2), reader.IsDBNull(3) ? "" : reader.GetString(3), reader.IsDBNull(4) ? "" : reader.GetString(4));
                             customers.Add(customer);
                         }
                     }
@@ -88,9 +87,12 @@ namespace RentC.Models
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    db.getDbConnection().Close();
-                    if (reader.HasRows)
+
+                    if (reader.HasRows) {
+                        db.getDbConnection().Close();
                         return true;
+                    }
+                    db.getDbConnection().Close();
                     return false;
                 }
             }
@@ -101,12 +103,9 @@ namespace RentC.Models
          * 2 = You don't have the permission to do this.
          * 3 = This customer doesn't exist.
          */
-        public int removeCustomer(int customerId, DbConnection db)
+        public bool removeCustomer(int customerId, DbConnection db)
         {
-            if (User.roleId != 1 && User.roleId != 2)
-                return 2;
-
-            string query = "DELETE FROM Customer WHERE CustomerID = @id";
+            string query = "DELETE FROM Customers WHERE CustomerID = @id";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
@@ -116,7 +115,7 @@ namespace RentC.Models
                 bool result = command.ExecuteNonQuery() > 0;
                 db.getDbConnection().Close();
 
-                return result ? 1 : 3;
+                return result;
             }
         }
     }

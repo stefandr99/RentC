@@ -1,4 +1,4 @@
-﻿using RentC.Db;
+﻿using RentC.Util;
 using RentC.Entities;
 using System;
 using System.Collections.Generic;
@@ -28,6 +28,7 @@ namespace RentC.Models
                 if (!reservation.couponCode.Equals(""))
                     command.Parameters.AddWithValue("@couponCode", reservation.couponCode);
 
+                db.getDbConnection().Close();
                 db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;
                 db.getDbConnection().Close();
@@ -36,17 +37,37 @@ namespace RentC.Models
             }
         }
 
-        public bool verifyReservation(int identifyId, DbConnection db) {
-            string query = "SELECT CustomerID FROM Reservations WHERE (CustomerID = @identifyId OR CarID = @identifyId) " +
+        public bool update(Reservation reservation, DbConnection db) {
+            string query = "UPDATE Reservations SET StartDate = @start, EndDate = @end, ReservStatsID = 1 WHERE CarID = @id";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                command.Parameters.AddWithValue("@start", reservation.startDate);
+                command.Parameters.AddWithValue("@end", reservation.endDate);
+                command.Parameters.AddWithValue("@id", reservation.carId);
+
+                db.getDbConnection().Open();
+                bool result = command.ExecuteNonQuery() > 0;
+                db.getDbConnection().Close();
+
+                return result;
+            }
+        }
+
+        public bool verifyReservation(int reservationId, DbConnection db) {
+            string query = "SELECT CustomerID FROM Reservations r WHERE CarID = @id " +
                            "and ReservStatsID = 1";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
-                command.Parameters.AddWithValue("@customerId", identifyId);
+                command.Parameters.AddWithValue("@id", reservationId);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
-                    db.getDbConnection().Close();
-                    if (reader.HasRows)
+
+                    if (reader.HasRows) {
+                        db.getDbConnection().Close();
                         return true;
+                    }
+                    db.getDbConnection().Close();
                     return false;
                 }
             }
@@ -92,7 +113,7 @@ namespace RentC.Models
         }
 
         public bool expiredReservations(DbConnection db) {
-            string query = "UPDATE Reservation SET ReservStatsID = 2 where ReservStatsID = 1 and EndDate < CURRENT_TIMESTAMP";
+            string query = "UPDATE Reservations SET ReservStatsID = 2 where ReservStatsID = 1 and EndDate < CURRENT_TIMESTAMP";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {

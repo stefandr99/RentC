@@ -3,55 +3,87 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RentC.Db;
 using RentC.Entities;
 using RentC.Models;
+using RentC.Util;
 
 namespace RentC.Controllers
 {
-    class UserController
+    public class UserController
     {
         public DbConnection db { get; }
         public UserModel userModel { get; }
 
-        UserController() {
+        public UserController() {
             userModel = new UserModel();
             db = DbConnection.getInstance;
         }
 
-        public string authUser(int userId, string password) {
-            if (userId == 0 || password.Equals("")) {
-                return "Please fill both fields!";
+        public Response authUser(string userId, string password) {
+            if (userId.Equals("") || password.Equals("")) {
+                return Response.UNFILLED_FIELDS;
             }
 
-            if (!userModel.authUser(userId, password, db)) {
-                return "UserID or password incorrect!";
+            if (!int.TryParse(userId, out int id))
+                return Response.INCORRECT_ID;
+
+            if (!userModel.authUser(id, password, db)) {
+                return Response.INCORRECT_CREDENTIALS;
             }
 
-            return "Authentication with success";
+            return Response.SUCCESS;
         }
 
-        public string changePassword(int userId, string oldPass, string newPass1, string newPass2) {
-            if (userId == 0 || oldPass.Equals("") || newPass1.Equals("")) {
-                return "Please fill all fields!";
+        public Response changePassword(string userId, string oldPass, string newPass1, string newPass2) {
+            if (userId.Equals("") || oldPass.Equals("") || newPass1.Equals("")) {
+                return Response.UNFILLED_FIELDS;
             }
+
+            if (!int.TryParse(userId, out int id))
+                return Response.INCORRECT_ID;
+
 
             if (!newPass1.Equals(newPass2))
-                return "Passwords don't match!";
-            if (!userModel.changePassword(userId, oldPass, newPass1, db))
-                return "Your old password is incorrect!";
-            return "Password changed with success!";
+                return Response.NOT_MATCH_PASS;
+            if (!userModel.changePassword(id, oldPass, newPass1, db))
+                return Response.INCORRECT_OLD_PASS;
+            return Response.SUCCESS;
         }
 
-        public string registerSaleperson(int userId, string password) {
-            if (userId == 0 || password.Equals(""))
+        public Response registerSaleperson(string userId, string password) {
+            if (userId.Equals("") || password.Equals(""))
             {
-                return "Please fill all fields!";
+                return Response.UNFILLED_FIELDS;
             }
 
-            if (!userModel.registerSaleperson(new User(userId, password), db))
-                return "There was a problem with registration! Please try again!";
-            return "Registration with success!";
+            if (!int.TryParse(userId, out int id))
+                return Response.INCORRECT_ID;
+
+            if (!userModel.registerSaleperson(new User(id, password), db))
+                return Response.DATABASE_ERROR;
+            return Response.SUCCESS;
+        }
+
+        public Response disableUser(string userId)
+        {
+            if (userId.Equals(""))
+            {
+                return Response.UNFILLED_FIELDS;
+            }
+
+            if (!int.TryParse(userId, out int id))
+                return Response.INCORRECT_ID;
+
+            if (!userModel.disableUser(id, db))
+            {
+                return Response.DATABASE_ERROR;
+            }
+
+            return Response.SUCCESS;
+        }
+
+        public List<User> list(int orderBy, string asc) {
+            return userModel.list(orderBy, asc, db);
         }
     }
 }

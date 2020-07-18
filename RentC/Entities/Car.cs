@@ -35,7 +35,7 @@ namespace RentC.Entities
         }
 
         public override string ToString() {
-            return carId + "   " + plate + "   " + manufacturer + "   " + model + "   " + pricePerDay + "   " + city + Environment.NewLine;
+            return "ID:" + carId + ", plate: " + plate + ", manufacturer: " + manufacturer + ", model: " + model + ", price per day: " + pricePerDay + ", city: " + city;
         }
     }
 }

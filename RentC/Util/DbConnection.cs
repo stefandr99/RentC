@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentC.Db
+namespace RentC.Util
 {
     public sealed class DbConnection
     {

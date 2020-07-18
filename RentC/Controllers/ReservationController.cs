@@ -1,4 +1,4 @@
-﻿using RentC.Db;
+﻿using RentC.Util;
 using RentC.Models;
 using System;
 using System.Collections.Generic;
@@ -27,59 +27,92 @@ namespace RentC.Controllers
             couponModel = new CouponModel();
         }
 
-        public string register(string plate, int customerId, string startDate, string endDate, string city)
+        public Response register(string plate, string customerId, string startDate, string endDate, string city)
         {
+            if (!int.TryParse(customerId, out int id))
+                return Response.INCORRECT_ID;
             if (!carModel.verifyExistenceCar(plate, db))
-                return "This car does not exist! Please choose another one!";
+                return Response.INEXISTENT_CAR;
 
             if (!carModel.verifyAvailableCar(plate, db))
-                return "This car is not available at the moment! Please choose another one!";
+                return Response.UNAVAILABLE_CAR;
 
             int carId = carModel.verifyCarLocationAndGetId(plate, city, db);
             if (carId == 0)
-                return "This car is not available in " + city + " . Please choose another one!";
+                return Response.UNAVAILABLE_CAR_IN_CITY;
 
-            if (!customerModel.verifyCustomer(customerId, db))
-                return "The customer with id: " + customerId.ToString() + " does not exist!";
+            if (!customerModel.verifyCustomer(id, db))
+                return Response.INEXISTENT_CUSTOMER;
 
             string format = "dd/MM/yyyy";
             DateTime sDate, eDate;
             if (!DateTime.TryParseExact(startDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out sDate))
-                return "The start date you have entered is not valid! Please enter another one!";
+                return Response.INVALID_DATE;
 
             if (!DateTime.TryParseExact(endDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out eDate))
-                return "The end date you have entered is not valid! Please enter another one!";
+                return Response.INVALID_DATE;
 
             if (DateTime.Compare(sDate, eDate) > 0)
-                return "Start date is later than end date! Please enter valid dates";
+                return Response.INVERSED_DATES;
+
+            if (DateTime.Compare(sDate, DateTime.Now) > 0)
+                return Response.INCORRECT_SDATE;
 
             string coupon = couponModel.getCoupon(db);
 
             if (!reservationModel.registerCarRent(
-                new Reservation(carId, customerId, sDate, eDate, city, coupon), db))
-                return "A problem has occured when trying to register! Please try again!";
+                new Reservation(carId, id, sDate, eDate, city, coupon), db))
+                return Response.DATABASE_ERROR;
 
-            return "You have been successfully registered!";
+            return Response.SUCCESS;
+        }
+
+        public Response update(string carId, string startDate, string endDate) {
+            if (!int.TryParse(carId, out int id))
+                return Response.INCORRECT_ID;
+            if (!reservationModel.verifyReservation(id, db))
+                return Response.INEXISTENT_RESERVATION;
+
+            string format = "dd/MM/yyyy";
+            DateTime sDate, eDate;
+            if (!DateTime.TryParseExact(startDate, format, new CultureInfo("en-US"),
+                DateTimeStyles.None, out sDate))
+                return Response.INVALID_DATE;
+            if (!DateTime.TryParseExact(endDate, format, new CultureInfo("en-US"),
+                DateTimeStyles.None, out eDate))
+                return Response.INVALID_DATE;
+            if (DateTime.Compare(sDate, eDate) > 0)
+                return Response.INVERSED_DATES;
+            if (DateTime.Compare(sDate, DateTime.Now) > 0)
+                return Response.INCORRECT_SDATE;
+
+            if (!reservationModel.update(new Reservation(id, sDate, eDate), db))
+                return Response.DATABASE_ERROR;
+
+            return Response.SUCCESS;
         }
 
         public List<Reservation> list(int orderBy, string ascendent) {
             return reservationModel.listReservations(orderBy, ascendent, db);
         }
 
-        public string cancelReservation(int identifyId) {
-            if (!reservationModel.verifyReservation(identifyId, db))
-                return "This reservation does not exist or it isn't open!";
-            if (!reservationModel.cancelReservation(identifyId, db))
-                return "A problem occured when you tried to cancel th reservation!";
-            return "Reservation cancelled with success!";
+        public Response cancelReservation(string identifyId) {
+            if (!int.TryParse(identifyId, out int id))
+                return Response.INCORRECT_ID;
+
+            if (!reservationModel.verifyReservation(id, db))
+                return Response.INEXISTENT_RESERVATION;
+            if (!reservationModel.cancelReservation(id, db))
+                return Response.DATABASE_ERROR;
+            return Response.SUCCESS;
         }
 
-        public string expiredReservations() {
+        public Response expiredReservations() {
             if (!reservationModel.expiredReservations(db))
-                return "A problem occured when we tried to update the reservations!";
-            return "Reservations has been updated!";
+                return Response.DATABASE_ERROR;
+            return Response.SUCCESS;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using RentC.Db;
+﻿using RentC.Util;
 using RentC.Entities;
 using System;
 using System.Collections.Generic;
@@ -57,28 +57,33 @@ namespace RentC.Models
          * 2 = You don't have the permission to do this.
          * 3 = This car doesn't exist.
          */
-        public int removeCar(int carId, DbConnection db) {
-            if (User.roleId != 1 && User.roleId != 2)
-                return 2;
+        public bool removeCar(int carId, DbConnection db) {
 
             string query = "DELETE FROM Cars WHERE CarID = @id";
-
+            bool result;
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
                 command.Parameters.AddWithValue("@id", carId);
 
                 db.getDbConnection().Open();
-                bool result = command.ExecuteNonQuery() > 0;
-                db.getDbConnection().Close();
-
-                return result ? 1 : 3;
+                
+                try {
+                    result = command.ExecuteNonQuery() > 0;
+                }
+                catch (System.Data.SqlClient.SqlException) {
+                    result = false;
+                }
             }
+
+            db.getDbConnection().Close();
+
+            return result;
         }
 
         public List<Car> listAvailableCars(int orderBy, string ascendent, DbConnection db) {
-            string query = "SELECT DISTINCT c.CarID, c.Plate, c.Manufacturer, c.Model, c.PricePerDay, c.City FROM Cars c " +
-                           "JOIN Reservations r ON c.CarID = r.CarID WHERE r.ReservStatsID in (2, 3) ORDER BY " + orderBy +
-                           " " + ascendent;
+            string query = "SELECT DISTINCT c.* FROM Cars c WHERE c.CarID NOT IN (SELECT ca.CarId FROM Cars ca " +
+                           "JOIN Reservations r ON ca.CarID = r.CarID WHERE r.ReservStatsID = 1)" +
+                           " ORDER BY " + orderBy + " " + ascendent;
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
                 db.getDbConnection().Open();
@@ -122,7 +127,7 @@ namespace RentC.Models
 
         public List<Tuple<int, Car>> listMostRentedCarsByMonth(int month, int year, DbConnection db) {
             string query =
-                "SELECT TOP(10) COUNT(r.CarID), c.CarID, c.Plate, c.City, c.Manufacturer, c.Model, c.PricePerDay FROM Cars c " +
+                "SELECT TOP(10) COUNT(r.CarID), c.CarID, c.Plate, c.Manufacturer, c.Model, c.PricePerDay, c.City FROM Cars c " +
                 "JOIN Reservations r ON c.CarID = r.CarID WHERE MONTH(r.StartDate) = @month AND YEAR(r.StartDate) = @year " +
                 "GROUP BY c.CarID, c.Plate, c.City, c.Manufacturer, c.Model, c.PricePerDay ORDER BY COUNT(r.CarID) DESC";
 
@@ -150,7 +155,7 @@ namespace RentC.Models
         public List<Tuple<int, Car>> listLessRentedCarsByMonth(int month, int year, DbConnection db)
         {
             string query =
-                "SELECT TOP(10) COUNT(r.CarID), c.CarID, c.Plate, c.City, c.Manufacturer, c.Model, c.PricePerDay FROM Cars c " +
+                "SELECT TOP(10) COUNT(r.CarID), c.CarID, c.Plate, c.Manufacturer, c.Model, c.PricePerDay, c.City FROM Cars c " +
                 "JOIN Reservations r ON c.CarID = r.CarID WHERE MONTH(r.StartDate) = @month AND YEAR(r.StartDate) = @year " +
                 "GROUP BY c.CarID, c.Plate, c.City, c.Manufacturer, c.Model, c.PricePerDay ORDER BY COUNT(r.CarID) ASC";
 
@@ -185,9 +190,11 @@ namespace RentC.Models
                 command.Parameters.AddWithValue("@plate", plate);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
-                    db.getDbConnection().Close();
-                    if (reader.HasRows)
+                    if (reader.HasRows) {
+                        db.getDbConnection().Close();
                         return true;
+                    }
+                    db.getDbConnection().Close();
                     return false;
                 }
             }
@@ -201,9 +208,12 @@ namespace RentC.Models
                 command.Parameters.AddWithValue("@plate", plate);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
-                    db.getDbConnection().Close();
                     if (reader.HasRows)
+                    {
+                        db.getDbConnection().Close();
                         return true;
+                    }
+                    db.getDbConnection().Close();
                     return false;
                 }
             }
@@ -217,9 +227,14 @@ namespace RentC.Models
                 command.Parameters.AddWithValue("@location", location);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
-                    db.getDbConnection().Close();
                     if (reader.HasRows)
-                        return reader.GetInt32(0);
+                        if (reader.Read()) {
+                            int result = reader.GetInt32(0);
+                            db.getDbConnection().Close();
+                            return result;
+                        }
+
+                    db.getDbConnection().Close();
                     return 0;
                 }
             }

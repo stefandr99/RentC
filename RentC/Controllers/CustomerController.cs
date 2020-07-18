@@ -1,4 +1,4 @@
-﻿using RentC.Db;
+﻿using RentC.Util;
 using RentC.Entities;
 using RentC.Models;
 using System;
@@ -21,77 +21,61 @@ namespace RentC.Controllers
             customerModel = new CustomerModel();
         }
 
-        public string register(string customerId, string customerName, string birthDate, string zip)
+        public Response register(string customerName, string birthDate, string zip)
         {
-            if (!int.TryParse(customerId, out int id))
-                return "The ClientID you have entered is not valid! Please enter another one!";
-
             string format = "dd/MM/yyyy";
             DateTime bdate;
             if (!DateTime.TryParseExact(birthDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out bdate))
-                return "The birth date you have entered is not valid! Please enter another one!";
+                return Response.INVALID_DATE;
 
             if (DateTime.Compare(bdate, DateTime.Now) > 0)
-                return "Please enter your real birth date! You cannot be born on " + birthDate + "!";
+                return Response.IREAL_BIRTH;
 
             if (!zip.Equals(""))
-                if (!int.TryParse(zip, out _) && zip.Length != 5)
-                    return "The ClientID you have entered is not valid! Please enter another one!";
+                if (zip.Length != 5 || !int.TryParse(zip, out _))
+                    return Response.INVALID_ZIP;
 
-            if (customerModel.verifyCustomer(id, db))
-                return "The ClientID you have entered has already been used! Please enter another one!";
+            if (!customerModel.registerCustomer(new Customer(customerName, bdate, zip), db))
+                return Response.DATABASE_ERROR;
 
-            if (!customerModel.registerCustomer(new Entities.Customer(id, customerName, bdate, zip), db))
-                return "A problem has occured when trying to register! Please try again!";
-
-            return "You have been successfully registered!";
+            return Response.SUCCESS;
         }
 
-        public string update(string customerId, string customerName, string birthDate, string zip)
+        public Response update(string customerId, string customerName, string birthDate, string zip)
         {
             if (!int.TryParse(customerId, out int id))
-                return "The ClientID you have entered is not valid! Please enter another one!";
+                return Response.INCORRECT_ID;
 
             if (!customerModel.verifyCustomer(id, db))
-                return
-                    "You cannot update your customer profile because it doesn't exist anymore! Please create one to be able to update it!";
+                return Response.INEXISTENT_CUSTOMER;
 
             string format = "dd/MM/yyyy";
             DateTime bdate;
             if (!DateTime.TryParseExact(birthDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out bdate))
-                return "The birth date you have entered is not valid! Please enter another one!";
+                return Response.INVALID_DATE;
 
             if (DateTime.Compare(bdate, DateTime.Now) > 0)
-                return "Please enter your real birth date! You cannot be born on " + birthDate + "!";
+                return Response.IREAL_BIRTH;
 
             if (!zip.Equals(""))
-                if (!int.TryParse(zip, out _) && zip.Length != 5)
-                    return "The ClientID you have entered is not valid! Please enter another one!";
-
-            if (customerModel.verifyCustomer(id, db))
-                return "The ClientID you have entered has already been used! Please enter another one!";
+                if (zip.Length != 5 || !int.TryParse(zip, out _))
+                    return Response.INVALID_ZIP;
 
 
-            if (!customerModel.updateCustomer(new Entities.Customer(id, customerName, bdate, zip), db))
-                return "A problem has occured when trying to update your profile! Please try again!";
+            if (!customerModel.updateCustomer(new Customer(id ,customerName, bdate, zip), db))
+                return Response.DATABASE_ERROR;
 
-            return "Your profile have been successfully updated!";
+            return Response.SUCCESS;
         }
 
-        public string removeCustomer(int customerId) {
-            int result = customerModel.removeCustomer(customerId, db);
-            switch (result) {
-                case 1:
-                    return "Customer removed with success!";
-                case 2:
-                    return "You do not have permission to do this!";
-                case 3:
-                    return "This customer does not exist!";
-                default:
-                    return "";
-            }
+        public Response removeCustomer(string customerId) {
+            if (!int.TryParse(customerId, out int id))
+                return Response.INCORRECT_ID;
+            bool result = customerModel.removeCustomer(id, db);
+
+            return (result ? Response.SUCCESS : Response.INEXISTENT_CUSTOMER);
         }
 
         public List<Customer> list(int orderBy, string ascendent)

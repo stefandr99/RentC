@@ -27,23 +27,22 @@ namespace RentC.Entities
             this.ZIPCode = ZIPCode;
         }
 
-        public Customer(int customerId, string name, System.DateTime birthDate)
-        {
+        public Customer(int customerId, string name, System.DateTime birthDate, string ZIPCod) {
+            this.ZIPCode = ZIPCod;
             this.customerId = customerId;
             this.name = name;
             this.birthDate = birthDate;
         }
 
-        public Customer(int customerId, string name, System.DateTime birthDate, string ZIPCode)
+        public Customer(string name, System.DateTime birthDate, string ZIPCode)
         {
-            this.customerId = customerId;
             this.name = name;
             this.birthDate = birthDate;
             this.ZIPCode = ZIPCode;
         }
 
         public override string ToString() {
-            return customerId + "   " + name + "   " + birthDate + "   " + location + "   " + ZIPCode + Environment.NewLine;
+            return customerId + "   " + name + "   " + birthDate + "   " + location + "   " + ZIPCode;
         }
     }
 }

@@ -37,8 +37,14 @@ namespace RentC.Entities
             this.location = location;
         }
 
+        public Reservation(int carId, System.DateTime startDate, System.DateTime endDate) {
+            this.carId = carId;
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
         public override string ToString() {
-            return carId + "   " + customerId + "   " + startDate + "   " + endDate + "   " + location + Environment.NewLine;
+            return carId + "   " + customerId + "   " + startDate + "   " + endDate + "   " + location;
         }
     }
 }

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace RentC.Entities
 {
-    class User
+    public class User
     {
         public int userId { get; set; }
         public string password { get; set; }
         public int enabled { get; set; }
-        public static volatile int roleId;
+        public int roleId { get; set; };
 
         public User() { }
 
@@ -20,11 +20,12 @@ namespace RentC.Entities
             this.password = password;
         }
 
-        public User(int userId, string password, int enabled)
+        public User(int userId, string password, int enabled, int roleId)
         {
             this.userId = userId;
             this.password = password;
             this.enabled = enabled;
+            this.roleId = roleId;
         }
     }
 }
