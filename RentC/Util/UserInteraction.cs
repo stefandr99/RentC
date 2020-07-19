@@ -312,7 +312,7 @@ namespace RentC.Util
             Console.Write("Year: ");
             string year = Console.ReadLine();
 
-            printSpecialStats(controller.car.listMostRentedByMonth(month, year));
+            printSpecialCars(controller.car.listMostRentedByMonth(month, year));
         }
 
         public void lessByMonth() {
@@ -322,7 +322,7 @@ namespace RentC.Util
             Console.Write("Year: ");
             string year = Console.ReadLine();
 
-            printSpecialStats(controller.car.listLessRentedByMonth(month, year));
+            printSpecialCars(controller.car.listLessRentedByMonth(month, year));
         }
 
         public void printMostRecent(List<Car> cars) {
@@ -331,7 +331,7 @@ namespace RentC.Util
             }
         }
 
-        public void printSpecialStats(List<Tuple<int, Car>> cars)
+        public void printSpecialCars(List<Tuple<int, Car>> cars)
         {
             foreach (var carIterator in cars)
             {
@@ -339,12 +339,21 @@ namespace RentC.Util
             }
         }
 
+        public void printSpecialCustomers(List<Tuple<int, Customer>> customers)
+        {
+            foreach (var customerIterator in customers)
+            {
+                Console.WriteLine("Rented: " + customerIterator.Item1 + " times, customer description: " + customerIterator.Item2.ToString());
+            }
+        }
+
         public void specialStatistics() {
             while (true) {
                 Console.WriteLine("\n");
                 Console.WriteLine("1. Most recent rented cars" + Environment.NewLine + "2. Most rented carts in a given month" +
-                                  Environment.NewLine + "3. Less rented carts in a given month" + Environment.NewLine + 
-                                  "4. Back to main menu" + Environment.NewLine);
+                                  Environment.NewLine + "3. Less rented carts in a given month" + Environment.NewLine +
+                                  "4. Gold customers" + Environment.NewLine + "5. Silver customers" + 
+                                  Environment.NewLine + "6. Back to main menu" + Environment.NewLine);
                 Console.Write("Answer: ");
                 string resp = Console.ReadLine();
                 switch (resp) {
@@ -361,6 +370,14 @@ namespace RentC.Util
                         break;
                     }
                     case "4": {
+                        printSpecialCustomers(controller.reservation.goldCustomers());
+                        break;
+                    }
+                    case "5": {
+                        printSpecialCustomers(controller.reservation.silverCustomers());
+                        break;
+                    }
+                    case "6": {
                         goto mainMenu;
                     }
                 }

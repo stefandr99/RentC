@@ -114,5 +114,14 @@ namespace RentC.Controllers
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }
+
+        public List<Tuple<int, Customer>> goldCustomers()
+        {
+            return reservationModel.goldCustomers(db);
+        }
+
+        public List<Tuple<int, Customer>> silverCustomers() {
+            return reservationModel.silverCustomers(db);
+        }
     }
 }
