@@ -269,7 +269,7 @@ namespace RentC.Util
                 PropertyInfo[] info;
                 Type type = list[0].GetType();
                 info = type.GetProperties();
-                Console.WriteLine("Sort: ");
+                Console.WriteLine("Sort by: ");
                 int i;
                 for (i = 0; i < info.Length; i++) {
                     Console.WriteLine(i + ". " + info[i].Name);
@@ -277,8 +277,11 @@ namespace RentC.Util
 
                 Console.WriteLine(i + ". Menu");
 
+                Console.Write("Answer: ");
                 string r = Console.ReadLine();
+
                 int.TryParse(r, out int answer);
+
                 if (answer > info.Length || answer < 0) {
                     Console.WriteLine("This hasn't been an option.");
                 }
@@ -302,12 +305,67 @@ namespace RentC.Util
             }
         }
 
+        public void mostByMonth() {
+            Console.Write("Month: ");
+            string month = Console.ReadLine();
+
+            Console.Write("Year: ");
+            string year = Console.ReadLine();
+
+            printSpecialStats(controller.car.listMostRentedByMonth(month, year));
+        }
+
+        public void lessByMonth() {
+            Console.Write("Month: ");
+            string month = Console.ReadLine();
+
+            Console.Write("Year: ");
+            string year = Console.ReadLine();
+
+            printSpecialStats(controller.car.listLessRentedByMonth(month, year));
+        }
+
+        public void printMostRecent(List<Car> cars) {
+            foreach (var c in cars) {
+                Console.WriteLine(c.ToString());
+            }
+        }
+
         public void printSpecialStats(List<Tuple<int, Car>> cars)
         {
             foreach (var carIterator in cars)
             {
                 Console.WriteLine("Rented: " + carIterator.Item1 + " times, car description: " + carIterator.Item2.ToString());
             }
+        }
+
+        public void specialStatistics() {
+            while (true) {
+                Console.WriteLine("\n");
+                Console.WriteLine("1. Most recent rented cars" + Environment.NewLine + "2. Most rented carts in a given month" +
+                                  Environment.NewLine + "3. Less rented carts in a given month" + Environment.NewLine + 
+                                  "4. Back to main menu" + Environment.NewLine);
+                Console.Write("Answer: ");
+                string resp = Console.ReadLine();
+                switch (resp) {
+                    case "1": {
+                        printMostRecent(controller.car.listMostRecentCars());
+                        break;
+                    }
+                    case "2": {
+                        mostByMonth();
+                        break;
+                    }
+                    case "3": {
+                        lessByMonth();
+                        break;
+                    }
+                    case "4": {
+                        goto mainMenu;
+                    }
+                }
+            }
+            mainMenu: ;
         }
 
         public void adminSession()
@@ -325,7 +383,7 @@ namespace RentC.Util
                                   "12. List users" + Environment.NewLine + "13. Change password" + Environment.NewLine + 
                                   "14. Register salesperson" + Environment.NewLine +
                                   "15. Disable User" + Environment.NewLine + "16. Enable User" + Environment.NewLine + 
-                                  "17. Exit" + Environment.NewLine);
+                                  "17. Special statistics" + Environment.NewLine + "18. Exit" + Environment.NewLine);
                 Console.Write("Answer: ");
                 string respLine = Console.ReadLine();
                 switch (respLine) {
@@ -423,6 +481,11 @@ namespace RentC.Util
                         break;
                     }
                     case "17": {
+                        current = 17;
+                        specialStatistics();
+                        break;
+                    }
+                    case "18": {
                         System.Environment.Exit(0);
                         break;
                     }

@@ -60,13 +60,23 @@ namespace RentC.Controllers
             return carModel.listMostRecentCars(db);
         }
 
-        public List<Tuple<int, Car>> listMostRentedByMonth(int month, int year)
+        public List<Tuple<int, Car>> listMostRentedByMonth(string month, string year)
         {
-            return carModel.listMostRentedCarsByMonth(month, year, db);
+            if (!int.TryParse(month, out int m))
+                return null;
+            if (!int.TryParse(year, out int y))
+                return null;
+            return carModel.listMostRentedCarsByMonth(m, y, db);
         }
 
-        public List<Tuple<int, Car>> listLessRentedByMonth(int month, int year) {
-            return carModel.listLessRentedCarsByMonth(month, year, db);
+        public List<Tuple<int, Car>> listLessRentedByMonth(string month, string year) {
+            if (month.Equals("") || year.Equals(""))
+                return null;
+            if (!int.TryParse(month, out int m))
+                return null;
+            if (!int.TryParse(year, out int y))
+                return null;
+            return carModel.listLessRentedCarsByMonth(m, y, db);
         }
 
     }
