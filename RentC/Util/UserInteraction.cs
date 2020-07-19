@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +15,9 @@ namespace RentC.Util
     {
         private Controller controller { get; }
         private Response response { get; set; }
+        private int previous = 0;
+        private int current = 0;
+        private string order;
         public UserInteraction() {
             controller = new Controller();
         }
@@ -255,9 +260,45 @@ namespace RentC.Util
             Thread.Sleep(300);
         }
 
-        public void printList<T>(List<T> list) where T: class{
+        public void printList<T>(List<T> list) where T: class {
             foreach (var t in list) {
                 Console.WriteLine(t.ToString());
+            }
+
+            try {
+                PropertyInfo[] info;
+                Type type = list[0].GetType();
+                info = type.GetProperties();
+                Console.WriteLine("Sort: ");
+                int i;
+                for (i = 0; i < info.Length; i++) {
+                    Console.WriteLine(i + ". " + info[i].Name);
+                }
+
+                Console.WriteLine(i + ". Menu");
+
+                string r = Console.ReadLine();
+                int.TryParse(r, out int answer);
+                if (answer > info.Length || answer < 0) {
+                    Console.WriteLine("This hasn't been an option.");
+                }
+                else if (answer < info.Length) {
+                    if(type.FullName.Contains("Customer"))
+                        printList(controller.customer.list(answer + 1, order));
+                    else if(type.FullName.Contains("Car")) {
+                        printList(controller.car.listAvailable(answer + 1, order));
+                    }
+                    else if (type.FullName.Contains("Reservation")) {
+                        printList(controller.reservation.list(answer + 1, order));
+                    }
+                    else {
+                        printList(controller.user.list(answer + 1, order));
+                    }
+                }
+
+            }
+            catch (SecurityException) {
+                Console.WriteLine("A problem has occured! Please try again!");
             }
         }
 
@@ -272,6 +313,7 @@ namespace RentC.Util
         public void adminSession()
         {
             while (true) {
+                Console.WriteLine("\n");
                 Console.WriteLine("1. Register a new customer" + Environment.NewLine + "2. Update customer" +
                                   Environment.NewLine +
                                   "3. Remove customer" + Environment.NewLine + "4. Register a new reservation" +
@@ -284,70 +326,99 @@ namespace RentC.Util
                                   "14. Register salesperson" + Environment.NewLine +
                                   "15. Disable User" + Environment.NewLine + "16. Enable User" + Environment.NewLine + 
                                   "17. Exit" + Environment.NewLine);
+                Console.Write("Answer: ");
                 string respLine = Console.ReadLine();
                 switch (respLine) {
                     case "1": {
+                        current = 1;
                         registerCustomer();
                         break;
                     }
                     case "2": {
+                        current = 2;
                         updateCustomer();
                         break;
                     }
                     case "3": {
+                        current = 3;
                         removeCustomer();
                         break;
                     }
                     case "4": {
+                        current = 4;
                         registerReservation();
                         break;
                     }
                     case "5": {
+                        current = 5;
                         updateReservation();
                         break;
                     }
                     case "6": {
+                        current = 6;
                         cancelReservation();
                         break;
                     }
                     case "7": {
+                        current = 7;
                         registerCar();
                         break;
                     }
                     case "8": {
+                        current = 8;
                         removeCar();
                         break;
                     }
                     case "9": {
-                        printList(controller.customer.list(1, "ASC"));
+                        if (current != 0)
+                            previous = current;
+                        current = 9;
+                        order = current == previous ? "DESC" : "ASC";
+                        printList(controller.customer.list(1, order));
                         break;
                     }
                     case "10": {
-                        printList(controller.reservation.list(1, "ASC"));
+                        if (current != 0)
+                            previous = current;
+                        current = 10;
+                        order = current == previous ? "DESC" : "ASC";
+                        printList(controller.reservation.list(1, order));
                         break;
                     }
                     case "11": {
-                        printList(controller.car.listAvailable(1, "ASC"));
+                        if (current != 0)
+                            previous = current;
+                        current = 11;
+                        order = current == previous ? "DESC" : "ASC";
+                        printList(controller.car.listAvailable(1, order));
                         break;
                     }
                     case "12":
                     {
-                        printList(controller.user.list(1, "ASC"));
+                        if (current != 0)
+                            previous = current;
+                        current = 12;
+                        order = current == previous ? "DESC" : "ASC";
+                        printList(controller.user.list(1, order));
                         break;
                     }
                     case "13": {
+                        current = 13;
                         changePassword();
                         break;
                     }
                     case "14": {
+                        current = 14;
                         registerSaleperson();
                         break;
                     }
                     case "15": {
+                        current = 15;
                         disableUser();
                         break;
                     }
                     case "16": {
+                        current = 16;
                         enableUser();
                         break;
                     }
@@ -356,6 +427,7 @@ namespace RentC.Util
                         break;
                     }
                     default: {
+                        current = 0;
                         Console.WriteLine("This is not a valid option.");
                         break;
                     }
@@ -367,6 +439,7 @@ namespace RentC.Util
         {
             while (true)
             {
+                Console.WriteLine("\n");
                 Console.WriteLine("1. Register a new customer" + Environment.NewLine + "2. Update customer" +
                                   Environment.NewLine +
                                   "3. Remove customer" + Environment.NewLine + "4. Register a new reservation" +
@@ -376,54 +449,76 @@ namespace RentC.Util
                                   "8. Remove car" + Environment.NewLine + "9. List customers" + Environment.NewLine +
                                   "10. List reservations" + Environment.NewLine + "11. List cars" + Environment.NewLine +
                                   "12. Change password" + Environment.NewLine + "13. Exit" + Environment.NewLine);
+                Console.Write("Answer: ");
                 string respLine = Console.ReadLine();
                 switch (respLine)
                 {
                     case "1": {
+                        current = 1;
                         registerCustomer();
                         break;
                     }
                     case "2": {
+                        current = 2;
                         updateCustomer();
                         break;
                     }
                     case "3": {
+                        current = 3;
                         removeCustomer();
                         break;
                     }
                     case "4": {
+                        current = 4;
                         registerReservation();
                         break;
                     }
                     case "5": {
+                        current = 5;
                         updateReservation();
                         break;
                     }
                     case "6": {
+                        current = 6;
                         cancelReservation();
                         break;
                     }
                     case "7": {
+                        current = 7;
                         registerCar();
                         break;
                     }
                     case "8": {
+                        current = 8;
                         removeCar();
                         break;
                     }
                     case "9": {
-                        printList(controller.customer.list(1, "ASC"));
+                        if (current != 0)
+                            previous = current;
+                        current = 9;
+                        order = current == previous ? "DESC" : "ASC";
+                        printList(controller.customer.list(1, order));
                         break;
                     }
                     case "10": {
-                        printList(controller.reservation.list(1, "ASC"));
+                        if (current != 0)
+                            previous = current;
+                        current = 10;
+                        order = current == previous ? "DESC" : "ASC";
+                        printList(controller.reservation.list(1, order));
                         break;
                     }
                     case "11": {
-                        printList(controller.car.listAvailable(1, "ASC"));
+                        if (current != 0)
+                            previous = current;
+                        current = 11;
+                        order = current == previous ? "DESC" : "ASC";
+                        printList(controller.car.listAvailable(1, order));
                         break;
                     }
                     case "12": {
+                        current = 12;
                         changePassword();
                         break;
                     }
@@ -432,6 +527,7 @@ namespace RentC.Util
                         break;
                     }
                     default: {
+                        current = 0;
                         Console.WriteLine("This is not a valid option.");
                         break;
                     }
@@ -443,25 +539,34 @@ namespace RentC.Util
         {
             while (true)
             {
+                Console.WriteLine("\n");
                 Console.WriteLine("1. Register a new reservation" + Environment.NewLine + "2. Edit reservation" +
                                   "3. List reservations" + Environment.NewLine + "4. Change password" + Environment.NewLine + 
                                       "5. Exit" + Environment.NewLine);
+                Console.Write("Answer: ");
                 string respLine = Console.ReadLine();
                 switch (respLine)
                 {
                     case "1": {
+                        current = 1;
                         registerReservation();
                         break;
                     }
                     case "2": {
+                        current = 2;
                         updateReservation();
                         break;
                     }
                     case "3": {
-                        printList(controller.reservation.list(1, "ASC"));
+                        if (current != 0)
+                            previous = current;
+                        current = 3;
+                        order = current == previous ? "DESC" : "ASC";
+                        printList(controller.reservation.list(1, order));
                         break;
                     }
                     case "4": {
+                        current = 4;
                         changePassword();
                         break;
                     }
@@ -470,6 +575,7 @@ namespace RentC.Util
                         break;
                     }
                     default: {
+                        current = 0;
                         Console.WriteLine("This is not a valid option.");
                         break;
                     }
