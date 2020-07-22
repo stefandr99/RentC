@@ -1,5 +1,5 @@
 ﻿using RentC.Util;
-using RentC.Models;
+using RentC.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,35 +13,35 @@ namespace RentC.Controllers
     public class ReservationController
     {
         public DbConnection db { get; }
-        public ReservationModel reservationModel { get; }
-        public CarModel carModel { get; }
-        public CustomerModel customerModel { get; }
-        public CouponModel couponModel { get; }
+        public ReservationRepository reservationRepository { get; }
+        public CarRepository carRepository { get; }
+        public CustomerRepository customerRepository { get; }
+        public CouponRepository couponRepository { get; }
 
         public ReservationController()
         {
             db = DbConnection.getInstance;
-            reservationModel = new ReservationModel();
-            carModel = new CarModel();
-            customerModel = new CustomerModel();
-            couponModel = new CouponModel();
+            reservationRepository = new ReservationRepository();
+            carRepository = new CarRepository();
+            customerRepository = new CustomerRepository();
+            couponRepository = new CouponRepository();
         }
 
         public Response register(string plate, string customerId, string startDate, string endDate, string city)
         {
             if (!int.TryParse(customerId, out int id))
                 return Response.INCORRECT_ID;
-            if (!carModel.verifyExistenceCar(plate, db))
+            if (!carRepository.verifyExistenceCar(plate, db))
                 return Response.INEXISTENT_CAR;
 
-            if (!carModel.verifyAvailableCar(plate, db))
+            if (!carRepository.verifyAvailableCar(plate, db))
                 return Response.UNAVAILABLE_CAR;
 
-            int carId = carModel.verifyCarLocationAndGetId(plate, city, db);
+            int carId = carRepository.verifyCarLocationAndGetId(plate, city, db);
             if (carId == 0)
                 return Response.UNAVAILABLE_CAR_IN_CITY;
 
-            if (!customerModel.verifyCustomer(id, db))
+            if (!customerRepository.verifyCustomer(id, db))
                 return Response.INEXISTENT_CUSTOMER;
 
             string format = "dd/MM/yyyy";
@@ -60,10 +60,10 @@ namespace RentC.Controllers
             if (DateTime.Compare(sDate, DateTime.Now) < 0)
                 return Response.INCORRECT_SDATE;
 
-            string coupon = couponModel.getCoupon(db);
+            string coupon = couponRepository.getCoupon(db);
 
-            if (!reservationModel.registerCarRent(
-                new Reservation(carId, id, sDate, eDate, city, coupon), db))
+            if (reservationRepository.register(
+                new Reservation(carId, id, sDate, eDate, city, coupon), db) == 0)
                 return Response.DATABASE_ERROR;
 
             return Response.SUCCESS;
@@ -72,7 +72,7 @@ namespace RentC.Controllers
         public Response update(string carId, string startDate, string endDate) {
             if (!int.TryParse(carId, out int id))
                 return Response.INCORRECT_ID;
-            if (!reservationModel.verifyReservation(id, db))
+            if (!reservationRepository.verifyReservation(id, db))
                 return Response.INEXISTENT_RESERVATION;
 
             string format = "dd/MM/yyyy";
@@ -88,40 +88,40 @@ namespace RentC.Controllers
             if (DateTime.Compare(sDate, DateTime.Now) > 0)
                 return Response.INCORRECT_SDATE;
 
-            if (!reservationModel.update(new Reservation(id, sDate, eDate), db))
+            if (!reservationRepository.update(new Reservation(id, sDate, eDate), db))
                 return Response.DATABASE_ERROR;
 
             return Response.SUCCESS;
         }
 
         public List<Reservation> list(int orderBy, string ascendent) {
-            return reservationModel.listReservations(orderBy, ascendent, db);
+            return reservationRepository.list(orderBy, ascendent, db);
         }
 
         public Response cancelReservation(string identifyId) {
             if (!int.TryParse(identifyId, out int id))
                 return Response.INCORRECT_ID;
 
-            if (!reservationModel.verifyReservation(id, db))
+            if (!reservationRepository.verifyReservation(id, db))
                 return Response.INEXISTENT_RESERVATION;
-            if (!reservationModel.cancelReservation(id, db))
+            if (!reservationRepository.remove(id, db))
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }
 
         public Response expiredReservations() {
-            if (!reservationModel.expiredReservations(db))
+            if (!reservationRepository.expiredReservations(db))
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }
 
         public List<Tuple<int, Customer>> goldCustomers()
         {
-            return reservationModel.goldCustomers(db);
+            return reservationRepository.goldCustomers(db);
         }
 
         public List<Tuple<int, Customer>> silverCustomers() {
-            return reservationModel.silverCustomers(db);
+            return reservationRepository.silverCustomers(db);
         }
     }
 }

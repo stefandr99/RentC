@@ -1,6 +1,6 @@
 ﻿using RentC.Util;
 using RentC.Entities;
-using RentC.Models;
+using RentC.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,12 +13,12 @@ namespace RentC.Controllers
     public class CustomerController
     {
         public DbConnection db { get; }
-        public CustomerModel customerModel { get; }
+        public CustomerRepository customerRepository { get; }
 
         public CustomerController()
         {
             db = DbConnection.getInstance;
-            customerModel = new CustomerModel();
+            customerRepository = new CustomerRepository();
         }
 
         public Response register(string customerName, string birthDate, string zip)
@@ -36,7 +36,7 @@ namespace RentC.Controllers
                 if (zip.Length != 5 || !int.TryParse(zip, out _))
                     return Response.INVALID_ZIP;
 
-            if (!customerModel.registerCustomer(new Customer(customerName, bdate, zip), db))
+            if (customerRepository.register(new Customer(customerName, bdate, zip), db) == 0)
                 return Response.DATABASE_ERROR;
 
             return Response.SUCCESS;
@@ -47,7 +47,7 @@ namespace RentC.Controllers
             if (!int.TryParse(customerId, out int id))
                 return Response.INCORRECT_ID;
 
-            if (!customerModel.verifyCustomer(id, db))
+            if (!customerRepository.verifyCustomer(id, db))
                 return Response.INEXISTENT_CUSTOMER;
 
             string format = "dd/MM/yyyy";
@@ -64,7 +64,7 @@ namespace RentC.Controllers
                     return Response.INVALID_ZIP;
 
 
-            if (!customerModel.updateCustomer(new Customer(id ,customerName, bdate, zip), db))
+            if (!customerRepository.update(new Customer(id ,customerName, bdate, zip), db))
                 return Response.DATABASE_ERROR;
 
             return Response.SUCCESS;
@@ -73,14 +73,14 @@ namespace RentC.Controllers
         public Response removeCustomer(string customerId) {
             if (!int.TryParse(customerId, out int id))
                 return Response.INCORRECT_ID;
-            bool result = customerModel.removeCustomer(id, db);
+            bool result = customerRepository.remove(id, db);
 
             return (result ? Response.SUCCESS : Response.INEXISTENT_CUSTOMER);
         }
 
         public List<Customer> list(int orderBy, string ascendent)
         {
-            return customerModel.listCustomers(orderBy, ascendent, db);
+            return customerRepository.list(orderBy, ascendent, db);
         }
     }
 }

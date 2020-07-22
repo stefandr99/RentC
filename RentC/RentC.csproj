@@ -49,11 +49,12 @@
     <Compile Include="Controllers\ReservationController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Models\CarModel.cs" />
-    <Compile Include="Models\CouponModel.cs" />
-    <Compile Include="Models\CustomerModel.cs" />
-    <Compile Include="Models\ReservationModel.cs" />
-    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Repositories\CarRepository.cs" />
+    <Compile Include="Repositories\CouponRepository.cs" />
+    <Compile Include="Repositories\CustomerRepository.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\ReservationRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Util\DbConnection.cs" />
     <Compile Include="Entities\Car.cs" />
     <Compile Include="Entities\Coupon.cs" />

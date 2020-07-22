@@ -5,6 +5,13 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentC", "RentC\RentC.csproj", "{96540EE5-BFCB-4186-BF80-6677F32982F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentC-MVC", "RentC-MVC\RentC-MVC.csproj", "{56495ED6-59F3-47C3-8989-1B6123F2FDAE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{41B7F1E5-58E6-4723-8D99-3D44B280F87F} = {41B7F1E5-58E6-4723-8D99-3D44B280F87F}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentC-WS", "RentC-WS\RentC-WS.csproj", "{41B7F1E5-58E6-4723-8D99-3D44B280F87F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +22,14 @@ Global
 		{96540EE5-BFCB-4186-BF80-6677F32982F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96540EE5-BFCB-4186-BF80-6677F32982F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96540EE5-BFCB-4186-BF80-6677F32982F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56495ED6-59F3-47C3-8989-1B6123F2FDAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56495ED6-59F3-47C3-8989-1B6123F2FDAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56495ED6-59F3-47C3-8989-1B6123F2FDAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56495ED6-59F3-47C3-8989-1B6123F2FDAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41B7F1E5-58E6-4723-8D99-3D44B280F87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41B7F1E5-58E6-4723-8D99-3D44B280F87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41B7F1E5-58E6-4723-8D99-3D44B280F87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41B7F1E5-58E6-4723-8D99-3D44B280F87F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

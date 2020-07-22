@@ -1,6 +1,6 @@
 ﻿using RentC.Util;
 using RentC.Entities;
-using RentC.Models;
+using RentC.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +13,12 @@ namespace RentC.Controllers
     public class CarController
     {
         private DbConnection db { get; }
-        private CarModel carModel { get; }
+        private CarRepository carRepository { get; }
 
         public CarController()
         {
             db = DbConnection.getInstance;
-            carModel = new CarModel();
+            carRepository = new CarRepository();
         }
 
         public Response register(string plate, string manufacturer, string model, string pricePerDay, string city)
@@ -29,7 +29,7 @@ namespace RentC.Controllers
             if (!decimal.TryParse(pricePerDay, out decimal price))
                 return Response.INCORRECT_PRICE;
 
-            int result = carModel.register(new Car(plate, manufacturer, model, price, city), db);
+            int result = carRepository.register(new Car(plate, manufacturer, model, price, city), db);
             switch (result)
             {
                 case 0:
@@ -47,17 +47,17 @@ namespace RentC.Controllers
             if (!int.TryParse(carId, out int id))
                 return Response.INCORRECT_ID;
 
-            bool result = carModel.removeCar(id, db);
+            bool result = carRepository.remove(id, db);
             return result ? Response.SUCCESS : Response.INEXISTENT_CAR;
         }
 
         public List<Car> listAvailable(int orderBy, string ascendent)
         {
-            return carModel.listAvailableCars(orderBy, ascendent, db);
+            return carRepository.list(orderBy, ascendent, db);
         }
 
         public List<Car> listMostRecentCars() {
-            return carModel.listMostRecentCars(db);
+            return carRepository.listMostRecentCars(db);
         }
 
         public List<Tuple<int, Car>> listMostRentedByMonth(string month, string year)
@@ -66,7 +66,7 @@ namespace RentC.Controllers
                 return null;
             if (!int.TryParse(year, out int y))
                 return null;
-            return carModel.listMostRentedCarsByMonth(m, y, db);
+            return carRepository.listMostRentedCarsByMonth(m, y, db);
         }
 
         public List<Tuple<int, Car>> listLessRentedByMonth(string month, string year) {
@@ -76,7 +76,7 @@ namespace RentC.Controllers
                 return null;
             if (!int.TryParse(year, out int y))
                 return null;
-            return carModel.listLessRentedCarsByMonth(m, y, db);
+            return carRepository.listLessRentedCarsByMonth(m, y, db);
         }
 
     }

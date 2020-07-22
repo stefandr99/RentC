@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RentC.Entities;
-using RentC.Models;
+using RentC.Repositories;
 using RentC.Util;
 
 namespace RentC.Controllers
@@ -12,10 +12,10 @@ namespace RentC.Controllers
     public class UserController
     {
         public DbConnection db { get; }
-        public UserModel userModel { get; }
+        public UserRepository userRepository { get; }
 
         public UserController() {
-            userModel = new UserModel();
+            userRepository = new UserRepository();
             db = DbConnection.getInstance;
         }
 
@@ -26,7 +26,7 @@ namespace RentC.Controllers
 
             if (!int.TryParse(userId, out int id))
                 return Response.INCORRECT_ID;
-            int res = userModel.authUser(id, password, db);
+            int res = userRepository.authUser(id, password, db);
             return res == 0
                 ? Response.INCORRECT_CREDENTIALS
                 : (res == 1
@@ -46,7 +46,7 @@ namespace RentC.Controllers
 
             if (!newPass1.Equals(newPass2))
                 return Response.NOT_MATCH_PASS;
-            if (!userModel.changePassword(id, oldPass, newPass1, db))
+            if (!userRepository.changePassword(id, oldPass, newPass1, db))
                 return Response.INCORRECT_OLD_PASS;
             return Response.SUCCESS;
         }
@@ -56,7 +56,7 @@ namespace RentC.Controllers
                 return Response.UNFILLED_FIELDS;
             }
 
-            if (!userModel.registerSaleperson(new User(password), db))
+            if (userRepository.register(new User(password), db) == 0)
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }
@@ -70,7 +70,7 @@ namespace RentC.Controllers
             if (!int.TryParse(userId, out int id))
                 return Response.INCORRECT_ID;
 
-            if (!userModel.enableUser(id, db))
+            if (!userRepository.enableUser(id, db))
             {
                 return Response.DATABASE_ERROR;
             }
@@ -88,7 +88,7 @@ namespace RentC.Controllers
             if (!int.TryParse(userId, out int id))
                 return Response.INCORRECT_ID;
 
-            if (!userModel.disableUser(id, db))
+            if (!userRepository.remove(id, db))
             {
                 return Response.DATABASE_ERROR;
             }
@@ -97,7 +97,7 @@ namespace RentC.Controllers
         }
 
         public List<User> list(int orderBy, string asc) {
-            return userModel.list(orderBy, asc, db);
+            return userRepository.list(orderBy, asc, db);
         }
     }
 }
