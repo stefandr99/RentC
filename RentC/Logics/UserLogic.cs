@@ -7,14 +7,14 @@ using RentC.Entities;
 using RentC.Repositories;
 using RentC.Util;
 
-namespace RentC.Controllers
+namespace RentC.Logics
 {
-    public class UserController
+    public class UserLogic
     {
         public DbConnection db { get; }
         public UserRepository userRepository { get; }
 
-        public UserController() {
+        public UserLogic() {
             userRepository = new UserRepository();
             db = DbConnection.getInstance;
         }

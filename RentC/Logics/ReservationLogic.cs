@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using RentC.Entities;
 
-namespace RentC.Controllers
+namespace RentC.Logics
 {
-    public class ReservationController
+    public class ReservationLogic
     {
         public DbConnection db { get; }
         public ReservationRepository reservationRepository { get; }
@@ -18,7 +18,7 @@ namespace RentC.Controllers
         public CustomerRepository customerRepository { get; }
         public CouponRepository couponRepository { get; }
 
-        public ReservationController()
+        public ReservationLogic()
         {
             db = DbConnection.getInstance;
             reservationRepository = new ReservationRepository();

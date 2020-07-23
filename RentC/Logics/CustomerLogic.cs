@@ -8,14 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentC.Controllers
+namespace RentC.Logics
 {
-    public class CustomerController
+    public class CustomerLogic
     {
         public DbConnection db { get; }
         public CustomerRepository customerRepository { get; }
 
-        public CustomerController()
+        public CustomerLogic()
         {
             db = DbConnection.getInstance;
             customerRepository = new CustomerRepository();

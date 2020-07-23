@@ -43,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\CarController.cs" />
-    <Compile Include="Controllers\Controller.cs" />
-    <Compile Include="Controllers\CustomerController.cs" />
-    <Compile Include="Controllers\ReservationController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Logics\CarLogic.cs" />
+    <Compile Include="Logics\Logic.cs" />
+    <Compile Include="Logics\CustomerLogic.cs" />
+    <Compile Include="Logics\ReservationLogic.cs" />
+    <Compile Include="Logics\UserLogic.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Repositories\CarRepository.cs" />
     <Compile Include="Repositories\CouponRepository.cs" />
@@ -61,10 +61,10 @@
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\Reservation.cs" />
     <Compile Include="Entities\ReservationStatus.cs" />
-    <Compile Include="Util\Program.cs" />
+    <Compile Include="Presentation\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Response.cs" />
-    <Compile Include="Util\UserInteraction.cs" />
+    <Compile Include="Presentation\UserInteraction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -6,20 +6,21 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using RentC.Controllers;
+using RentC.Logics;
 using RentC.Entities;
+using RentC.Util;
 
-namespace RentC.Util
+namespace RentC.Presentation
 {
     public class UserInteraction
     {
-        private Controller controller { get; }
+        private Logic logic { get; }
         private Response response { get; set; }
         private int previous = 0;
         private int current = 0;
         private string order;
         public UserInteraction() {
-            controller = new Controller();
+            logic = new Logic();
         }
 
         public void start() {
@@ -53,7 +54,7 @@ namespace RentC.Util
             Console.Write("ZIP Code: ");
             string zip = Console.ReadLine();
             
-            response = controller.customer.register(name, birth, zip);
+            response = logic.customer.register(name, birth, zip);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Customer registered with success.");
             else getMessage(response);
@@ -72,7 +73,7 @@ namespace RentC.Util
             Console.Write("ZIP Code: ");
             string zip = Console.ReadLine();
 
-            response = controller.customer.update(id, name, birth, zip);
+            response = logic.customer.update(id, name, birth, zip);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Customer updated with success.");
             else getMessage(response);
@@ -85,7 +86,7 @@ namespace RentC.Util
             Console.Write("Client Id: ");
             string id = Console.ReadLine();
 
-            response = controller.customer.removeCustomer(id);
+            response = logic.customer.removeCustomer(id);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Customer removed with success.");
             else getMessage(response);
@@ -106,7 +107,7 @@ namespace RentC.Util
             Console.Write("City: ");
             string city = Console.ReadLine();
 
-            response = controller.car.register(plate, manufac, model, price, city);
+            response = logic.car.register(plate, manufac, model, price, city);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Car registered with success.");
             else getMessage(response);
@@ -119,7 +120,7 @@ namespace RentC.Util
             Console.Write("Car Id: ");
             string id = Console.ReadLine();
 
-            response = controller.car.remove(id);
+            response = logic.car.remove(id);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Car removed with success.");
             else getMessage(response);
@@ -140,7 +141,7 @@ namespace RentC.Util
             Console.Write("City: ");
             string city = Console.ReadLine();
 
-            response = controller.reservation.register(plate, id, start, end, city);
+            response = logic.reservation.register(plate, id, start, end, city);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Reservation registered with success.");
             else getMessage(response);
@@ -157,7 +158,7 @@ namespace RentC.Util
             Console.Write("End Date: ");
             string end = Console.ReadLine();
 
-            response = controller.reservation.update(id, start, end);
+            response = logic.reservation.update(id, start, end);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Reservation updated with success.");
             else getMessage(response);
@@ -169,7 +170,7 @@ namespace RentC.Util
             Console.Write("Car Id OR Customer Id: ");
             string id = Console.ReadLine();
 
-            response = controller.reservation.cancelReservation(id);
+            response = logic.reservation.cancelReservation(id);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Reservation canceled with success.");
             else getMessage(response);
@@ -184,7 +185,7 @@ namespace RentC.Util
                 Console.Write("Password: ");
                 string pass = Console.ReadLine();
 
-                response = controller.user.authUser(userId, pass);
+                response = logic.user.authUser(userId, pass);
 
                 if (response != Response.SUCCESS_ADMIN && response != Response.SUCCESS_MANAGER &&
                     response != Response.SUCCESS_SALESPERSON) {
@@ -213,7 +214,7 @@ namespace RentC.Util
             Console.Write("Confirm New Password: ");
             string newPass2 = Console.ReadLine();
 
-            response = controller.user.changePassword(userId, oldPass, newPass1, newPass2);
+            response = logic.user.changePassword(userId, oldPass, newPass1, newPass2);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Password changed with success.");
             else getMessage(response);
@@ -226,7 +227,7 @@ namespace RentC.Util
             Console.Write("Password: ");
             string pass = Console.ReadLine();
 
-            response = controller.user.registerSaleperson(pass);
+            response = logic.user.registerSaleperson(pass);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Salesperson registered with success.");
             else getMessage(response);
@@ -239,7 +240,7 @@ namespace RentC.Util
             Console.Write("User Id: ");
             string id = Console.ReadLine();
 
-            response = controller.user.enableUser(id);
+            response = logic.user.enableUser(id);
             if (response == Response.SUCCESS)
                 Console.WriteLine("User enabled with success.");
             else getMessage(response);
@@ -252,7 +253,7 @@ namespace RentC.Util
             Console.Write("User Id: ");
             string id = Console.ReadLine();
 
-            response = controller.user.disableUser(id);
+            response = logic.user.disableUser(id);
             if (response == Response.SUCCESS)
                 Console.WriteLine("User disabled with success.");
             else getMessage(response);
@@ -287,15 +288,15 @@ namespace RentC.Util
                 }
                 else if (answer < info.Length) {
                     if(type.FullName.Contains("Customer"))
-                        printList(controller.customer.list(answer + 1, order));
+                        printList(logic.customer.list(answer + 1, order));
                     else if(type.FullName.Contains("Car")) {
-                        printList(controller.car.listAvailable(answer + 1, order));
+                        printList(logic.car.listAvailable(answer + 1, order));
                     }
                     else if (type.FullName.Contains("Reservation")) {
-                        printList(controller.reservation.list(answer + 1, order));
+                        printList(logic.reservation.list(answer + 1, order));
                     }
                     else {
-                        printList(controller.user.list(answer + 1, order));
+                        printList(logic.user.list(answer + 1, order));
                     }
                 }
 
@@ -312,7 +313,7 @@ namespace RentC.Util
             Console.Write("Year: ");
             string year = Console.ReadLine();
 
-            printSpecialCars(controller.car.listMostRentedByMonth(month, year));
+            printSpecialCars(logic.car.listMostRentedByMonth(month, year));
         }
 
         public void lessByMonth() {
@@ -322,7 +323,7 @@ namespace RentC.Util
             Console.Write("Year: ");
             string year = Console.ReadLine();
 
-            printSpecialCars(controller.car.listLessRentedByMonth(month, year));
+            printSpecialCars(logic.car.listLessRentedByMonth(month, year));
         }
 
         public void printMostRecent(List<Car> cars) {
@@ -358,7 +359,7 @@ namespace RentC.Util
                 string resp = Console.ReadLine();
                 switch (resp) {
                     case "1": {
-                        printMostRecent(controller.car.listMostRecentCars());
+                        printMostRecent(logic.car.listMostRecentCars());
                         break;
                     }
                     case "2": {
@@ -370,11 +371,11 @@ namespace RentC.Util
                         break;
                     }
                     case "4": {
-                        printSpecialCustomers(controller.reservation.goldCustomers());
+                        printSpecialCustomers(logic.reservation.goldCustomers());
                         break;
                     }
                     case "5": {
-                        printSpecialCustomers(controller.reservation.silverCustomers());
+                        printSpecialCustomers(logic.reservation.silverCustomers());
                         break;
                     }
                     case "6": {
@@ -449,7 +450,7 @@ namespace RentC.Util
                             previous = current;
                         current = 9;
                         order = current == previous ? "DESC" : "ASC";
-                        printList(controller.customer.list(1, order));
+                        printList(logic.customer.list(1, order));
                         break;
                     }
                     case "10": {
@@ -457,7 +458,7 @@ namespace RentC.Util
                             previous = current;
                         current = 10;
                         order = current == previous ? "DESC" : "ASC";
-                        printList(controller.reservation.list(1, order));
+                        printList(logic.reservation.list(1, order));
                         break;
                     }
                     case "11": {
@@ -465,7 +466,7 @@ namespace RentC.Util
                             previous = current;
                         current = 11;
                         order = current == previous ? "DESC" : "ASC";
-                        printList(controller.car.listAvailable(1, order));
+                        printList(logic.car.listAvailable(1, order));
                         break;
                     }
                     case "12":
@@ -474,7 +475,7 @@ namespace RentC.Util
                             previous = current;
                         current = 12;
                         order = current == previous ? "DESC" : "ASC";
-                        printList(controller.user.list(1, order));
+                        printList(logic.user.list(1, order));
                         break;
                     }
                     case "13": {
@@ -578,7 +579,7 @@ namespace RentC.Util
                             previous = current;
                         current = 9;
                         order = current == previous ? "DESC" : "ASC";
-                        printList(controller.customer.list(1, order));
+                        printList(logic.customer.list(1, order));
                         break;
                     }
                     case "10": {
@@ -586,7 +587,7 @@ namespace RentC.Util
                             previous = current;
                         current = 10;
                         order = current == previous ? "DESC" : "ASC";
-                        printList(controller.reservation.list(1, order));
+                        printList(logic.reservation.list(1, order));
                         break;
                     }
                     case "11": {
@@ -594,7 +595,7 @@ namespace RentC.Util
                             previous = current;
                         current = 11;
                         order = current == previous ? "DESC" : "ASC";
-                        printList(controller.car.listAvailable(1, order));
+                        printList(logic.car.listAvailable(1, order));
                         break;
                     }
                     case "12": {
@@ -642,7 +643,7 @@ namespace RentC.Util
                             previous = current;
                         current = 3;
                         order = current == previous ? "DESC" : "ASC";
-                        printList(controller.reservation.list(1, order));
+                        printList(logic.reservation.list(1, order));
                         break;
                     }
                     case "4": {
