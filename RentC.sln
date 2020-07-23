@@ -5,12 +5,12 @@ VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentC", "RentC\RentC.csproj", "{96540EE5-BFCB-4186-BF80-6677F32982F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentC-MVC", "RentC-MVC\RentC-MVC.csproj", "{56495ED6-59F3-47C3-8989-1B6123F2FDAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentC_MVC", "RentC-MVC\RentC_MVC.csproj", "{56495ED6-59F3-47C3-8989-1B6123F2FDAE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{41B7F1E5-58E6-4723-8D99-3D44B280F87F} = {41B7F1E5-58E6-4723-8D99-3D44B280F87F}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentC-WS", "RentC-WS\RentC-WS.csproj", "{41B7F1E5-58E6-4723-8D99-3D44B280F87F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentC_WS", "RentC-WS\RentC_WS.csproj", "{41B7F1E5-58E6-4723-8D99-3D44B280F87F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

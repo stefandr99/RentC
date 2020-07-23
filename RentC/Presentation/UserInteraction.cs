@@ -6,7 +6,7 @@ using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using RentC.Logics;
+using RentC.BLL;
 using RentC.Entities;
 using RentC.Util;
 
@@ -386,6 +386,9 @@ namespace RentC.Presentation
             mainMenu: ;
         }
 
+        /**
+         * De implementat si update car
+         */
         public void adminSession()
         {
             while (true) {

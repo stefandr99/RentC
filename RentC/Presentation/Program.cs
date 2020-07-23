@@ -6,10 +6,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RentC.Controllers;
 using RentC.Entities;
 
-namespace RentC.Util
+namespace RentC.Presentation
 {
     public class Program
     {

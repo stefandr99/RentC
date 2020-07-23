@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RentC.Entities;
-using RentC.Repositories;
-using RentC.Util;
+using RentC_MVC.Models;
+using RentC_MVC.DAL;
+using RentC_MVC.Repositories;
+using RentC_MVC.Util;
 
-namespace RentC.Logics
+namespace RentC_MVC.BLL
 {
     public class UserLogic
     {
         public DbConnection db { get; }
-        public UserRepository userRepository { get; }
+        public UserData userData { get; }
 
         public UserLogic() {
-            userRepository = new UserRepository();
+            userData = new UserData(new UserRepository());
             db = DbConnection.getInstance;
         }
 
@@ -26,7 +27,7 @@ namespace RentC.Logics
 
             if (!int.TryParse(userId, out int id))
                 return Response.INCORRECT_ID;
-            int res = userRepository.authUser(id, password, db);
+            int res = userData.authUser(id, password, db);
             return res == 0
                 ? Response.INCORRECT_CREDENTIALS
                 : (res == 1
@@ -46,7 +47,7 @@ namespace RentC.Logics
 
             if (!newPass1.Equals(newPass2))
                 return Response.NOT_MATCH_PASS;
-            if (!userRepository.changePassword(id, oldPass, newPass1, db))
+            if (!userData.changePassword(id, oldPass, newPass1, db))
                 return Response.INCORRECT_OLD_PASS;
             return Response.SUCCESS;
         }
@@ -56,7 +57,7 @@ namespace RentC.Logics
                 return Response.UNFILLED_FIELDS;
             }
 
-            if (userRepository.register(new User(password), db) == 0)
+            if (userData.register(new User(password), db) == 0)
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }
@@ -70,7 +71,7 @@ namespace RentC.Logics
             if (!int.TryParse(userId, out int id))
                 return Response.INCORRECT_ID;
 
-            if (!userRepository.enableUser(id, db))
+            if (!userData.enableUser(id, db))
             {
                 return Response.DATABASE_ERROR;
             }
@@ -88,7 +89,7 @@ namespace RentC.Logics
             if (!int.TryParse(userId, out int id))
                 return Response.INCORRECT_ID;
 
-            if (!userRepository.remove(id, db))
+            if (!userData.remove(id, db))
             {
                 return Response.DATABASE_ERROR;
             }
@@ -97,7 +98,7 @@ namespace RentC.Logics
         }
 
         public List<User> list(int orderBy, string asc) {
-            return userRepository.list(orderBy, asc, db);
+            return userData.list(orderBy, asc, db);
         }
     }
 }

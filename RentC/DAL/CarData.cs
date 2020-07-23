@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentC.Repositories
+namespace RentC.DAL
 {
-    public class CarRepository : IRepository<Car>
+    public class CarData
     {
         /**
          * 0 = Database error;

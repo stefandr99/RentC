@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentC.Logics
+namespace RentC_MVC.BLL
 {
     public class Logic
     {

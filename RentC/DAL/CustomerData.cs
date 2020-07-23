@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentC.Repositories
+namespace RentC.DAL
 {
-    public class CustomerRepository : IRepository<Customer>
+    public class CustomerData
     {
         public int register(Customer customer, DbConnection db)
         {

@@ -43,18 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logics\CarLogic.cs" />
-    <Compile Include="Logics\Logic.cs" />
-    <Compile Include="Logics\CustomerLogic.cs" />
-    <Compile Include="Logics\ReservationLogic.cs" />
-    <Compile Include="Logics\UserLogic.cs" />
+    <Compile Include="BLL\CarLogic.cs" />
+    <Compile Include="BLL\Logic.cs" />
+    <Compile Include="BLL\CustomerLogic.cs" />
+    <Compile Include="BLL\ReservationLogic.cs" />
+    <Compile Include="BLL\UserLogic.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Repositories\CarRepository.cs" />
-    <Compile Include="Repositories\CouponRepository.cs" />
-    <Compile Include="Repositories\CustomerRepository.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\ReservationRepository.cs" />
-    <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="DAL\CarData.cs" />
+    <Compile Include="DAL\CouponData.cs" />
+    <Compile Include="DAL\CustomerData.cs" />
+    <Compile Include="DAL\ReservationData.cs" />
+    <Compile Include="DAL\UserData.cs" />
     <Compile Include="Util\DbConnection.cs" />
     <Compile Include="Entities\Car.cs" />
     <Compile Include="Entities\Coupon.cs" />

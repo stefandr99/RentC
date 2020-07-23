@@ -1,57 +1,28 @@
-﻿using RentC.Util;
-using RentC.Entities;
+﻿using RentC_MVC.Util;
+using RentC_MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RentC_MVC.Repositories;
 
-namespace RentC.Repositories
+namespace RentC_MVC.DAL
 {
-    public class ReservationRepository : IRepository<Reservation>
+    public class ReservationData
     {
+        private IRepository<Reservation> reservationRepository { get; set; }
+
+        public ReservationData(IRepository<Reservation> reservation) {
+            reservationRepository = reservation;
+        }
         public int register(Reservation reservation, DbConnection db) {
-            string query = reservation.couponCode.Equals("")
-                ? "INSERT INTO Reservations VALUES " +
-                  "(@carID, @customerID, @reservStatsID, @startDate, @endDate, @location)"
-                : "INSERT INTO Reservations VALUES " +
-                  "(@carID, @customerID, @reservStatsID, @startDate, @endDate, @location, @couponCode)";
-
-            using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
-                command.Parameters.AddWithValue("@carID", reservation.carId);
-                command.Parameters.AddWithValue("@customerID", reservation.customerId);
-                command.Parameters.AddWithValue("@reservStatsId", 1);
-                command.Parameters.AddWithValue("@startDate", reservation.startDate);
-                command.Parameters.AddWithValue("@endDate", reservation.endDate);
-                command.Parameters.AddWithValue("@location", reservation.location);
-                if (!reservation.couponCode.Equals(""))
-                    command.Parameters.AddWithValue("@couponCode", reservation.couponCode);
-
-                db.getDbConnection().Close();
-                db.getDbConnection().Open();
-                int result = command.ExecuteNonQuery();
-                db.getDbConnection().Close();
-
-                return result;
-            }
+            return reservationRepository.register(reservation, db);
         }
 
         public bool update(Reservation reservation, DbConnection db) {
-            string query = "UPDATE Reservations SET StartDate = @start, EndDate = @end, ReservStatsID = 1 WHERE CarID = @id";
-
-            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
-            {
-                command.Parameters.AddWithValue("@start", reservation.startDate);
-                command.Parameters.AddWithValue("@end", reservation.endDate);
-                command.Parameters.AddWithValue("@id", reservation.carId);
-
-                db.getDbConnection().Open();
-                bool result = command.ExecuteNonQuery() > 0;
-                db.getDbConnection().Close();
-
-                return result;
-            }
+            return reservationRepository.update(reservation, db);
         }
 
         public bool verifyReservation(int reservationId, DbConnection db) {
@@ -74,42 +45,14 @@ namespace RentC.Repositories
         }
 
         public List<Reservation> list(int orderBy, string ascendent, DbConnection db) {
-            string query = "SELECT * FROM Reservations where ReservStatsID = 1 ORDER BY " + orderBy + " " + ascendent;
-
-            using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
-                db.getDbConnection().Open();
-                using (SqlDataReader reader = command.ExecuteReader()) {
-                    List<Reservation> reservations = new List<Reservation>();
-                    if (reader.HasRows) {
-                        while (reader.Read()) {
-                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1),
-                                reader.GetDateTime(3), reader.GetDateTime(4), reader.GetString(5));
-                            reservations.Add(reservation);
-                        }
-                    }
-
-                    db.getDbConnection().Close();
-                    return reservations;
-                }
-            }
+            return reservationRepository.list(orderBy, ascendent, db);
         }
 
         /**
          * Could change status depending of CarID or CustomerID
          */
         public bool remove(int identifyId,  DbConnection db) {
-            string query = "UPDATE Reservation SET ReservStatsID = 3 where CarID = @id OR CustomerID = @id";
-
-            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
-            {
-                command.Parameters.AddWithValue("@id", identifyId);
-
-                db.getDbConnection().Open();
-                bool result = command.ExecuteNonQuery() > 0;
-                db.getDbConnection().Close();
-
-                return result;
-            }
+            return reservationRepository.remove(identifyId, db);
         }
 
         public bool expiredReservations(DbConnection db) {

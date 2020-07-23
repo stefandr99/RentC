@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RentC.Util;
+using RentC_MVC.Util;
 
-namespace RentC.Repositories
+namespace RentC_MVC.Repositories
 {
-    interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
         int register(T obj, DbConnection db);
         bool remove(int id, DbConnection db);
