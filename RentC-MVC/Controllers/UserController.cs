@@ -74,7 +74,7 @@ namespace RentC_MVC.Controllers
             User user = logic.user.findById(id);
             if (user == null)
                 return HttpNotFound();
-            logic.car.remove(id);
+            logic.user.disableUser(id);
             return RedirectToAction("List");
         }
 

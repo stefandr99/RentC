@@ -75,23 +75,23 @@ namespace RentC_MVC.BLL
             return carData.listMostRecentCars(db);
         }
 
-        public List<Tuple<int, Car>> listMostRentedByMonth(string month, string year)
+        public List<Tuple<int, Car>> listMostRentedByMonth(int month, int year)
         {
-            if (!int.TryParse(month, out int m))
+            /*if (!int.TryParse(month, out int m))
                 return null;
             if (!int.TryParse(year, out int y))
-                return null;
-            return carData.listMostRentedCarsByMonth(m, y, db);
+                return null;*/
+            return carData.listMostRentedCarsByMonth(month, year, db);
         }
 
-        public List<Tuple<int, Car>> listLessRentedByMonth(string month, string year) {
-            if (month.Equals("") || year.Equals(""))
+        public List<Tuple<int, Car>> listLessRentedByMonth(int month, int year) {
+            /*if (month.Equals("") || year.Equals(""))
                 return null;
             if (!int.TryParse(month, out int m))
                 return null;
             if (!int.TryParse(year, out int y))
-                return null;
-            return carData.listLessRentedCarsByMonth(m, y, db);
+                return null;*/
+            return carData.listLessRentedCarsByMonth(month, year, db);
         }
 
     }

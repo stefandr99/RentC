@@ -93,5 +93,15 @@ namespace RentC_MVC.BLL
         {
             return customerData.findById(id, db);
         }
+
+        public List<Tuple<int, Customer>> goldCustomers()
+        {
+            return customerData.goldCustomers(db);
+        }
+
+        public List<Tuple<int, Customer>> silverCustomers()
+        {
+            return customerData.silverCustomers(db);
+        }
     }
 }

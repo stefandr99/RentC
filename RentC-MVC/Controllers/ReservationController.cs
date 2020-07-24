@@ -92,5 +92,10 @@ namespace RentC_MVC.Controllers
                 return RedirectToAction("List");
             }
         }
+
+        public void ExpiredReservations() {
+            logic.reservation.expiredReservations();
+        }
+
     }
 }

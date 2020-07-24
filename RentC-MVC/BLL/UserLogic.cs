@@ -62,16 +62,16 @@ namespace RentC_MVC.BLL
             return Response.SUCCESS;
         }
 
-        public Response enableUser(string userId)
+        public Response enableUser(int userId)
         {
-            if (userId.Equals("")) {
+            /*if (userId.Equals("")) {
                 return Response.UNFILLED_FIELDS;
             }
 
             if (!int.TryParse(userId, out int id))
-                return Response.INCORRECT_ID;
+                return Response.INCORRECT_ID;*/
 
-            if (!userData.enableUser(id, db))
+            if (!userData.enableUser(userId, db))
             {
                 return Response.DATABASE_ERROR;
             }
@@ -79,17 +79,17 @@ namespace RentC_MVC.BLL
             return Response.SUCCESS;
         }
 
-        public Response disableUser(string userId)
+        public Response disableUser(int userId)
         {
-            if (userId.Equals(""))
+            /*if (userId.Equals(""))
             {
                 return Response.UNFILLED_FIELDS;
             }
 
             if (!int.TryParse(userId, out int id))
-                return Response.INCORRECT_ID;
+                return Response.INCORRECT_ID;*/
 
-            if (!userData.remove(id, db))
+            if (!userData.remove(userId, db))
             {
                 return Response.DATABASE_ERROR;
             }

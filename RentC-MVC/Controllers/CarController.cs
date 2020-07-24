@@ -92,5 +92,35 @@ namespace RentC_MVC.Controllers
                 return RedirectToAction("List");
             }
         }
+
+        public ActionResult ListMostRecentCars()
+        {
+            List<Car> cars = logic.car.listMostRecentCars();
+            return View(cars);
+        }
+        
+        [HttpPost]
+        public ActionResult ListMostRentedByMonth()
+        {
+            return View();
+        }
+
+        public ActionResult ListMostRentedByMonth2(int month, int year)
+        {
+            List<Tuple<int, Car>> cars = new List<Tuple<int, Car>>(logic.car.listMostRentedByMonth(month, year));
+            return View(cars);
+        }
+
+        [HttpPost]
+        public ActionResult ListLessRentedByMonth()
+        {
+            return View();
+        }
+
+        public ActionResult ListLessRentedByMonth2(int month, int year)
+        {
+            List<Tuple<int, Car>> cars = new List<Tuple<int, Car>>(logic.car.listLessRentedByMonth(month, year));
+            return View(cars);
+        }
     }
 }

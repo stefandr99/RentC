@@ -84,5 +84,17 @@ namespace RentC_MVC.Controllers
                 return RedirectToAction("List");
             }
         }
+
+        public ActionResult GoldCustomers()
+        {
+            List<Tuple<int, Customer>> customers = logic.customer.goldCustomers();
+            return View(customers);
+        }
+
+        public ActionResult SilverCustomers()
+        {
+            List<Tuple<int, Customer>> customers = logic.customer.silverCustomers();
+            return View(customers);
+        }
     }
 }

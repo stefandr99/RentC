@@ -311,6 +311,13 @@
     <Content Include="Views\User\List.cshtml" />
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\User\ChangePass.cshtml" />
+    <Content Include="Views\Car\ListMostRecentCars.cshtml" />
+    <Content Include="Views\Car\ListMostRentedByMonth.cshtml" />
+    <Content Include="Views\Car\ListMostRentedByMonth2.cshtml" />
+    <Content Include="Views\Car\ListLessRentedByMonth.cshtml" />
+    <Content Include="Views\Car\ListLessRentedByMonth2.cshtml" />
+    <Content Include="Views\Customer\GoldCustomers.cshtml" />
+    <Content Include="Views\Customer\SilverCustomers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

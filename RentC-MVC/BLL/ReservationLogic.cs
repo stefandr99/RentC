@@ -120,13 +120,5 @@ namespace RentC_MVC.BLL
             return Response.SUCCESS;
         }
 
-        public List<Tuple<int, Customer>> goldCustomers()
-        {
-            return reservationData.goldCustomers(db);
-        }
-
-        public List<Tuple<int, Customer>> silverCustomers() {
-            return reservationData.silverCustomers(db);
-        }
     }
 }
