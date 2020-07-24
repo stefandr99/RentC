@@ -22,59 +22,64 @@ namespace RentC_MVC.BLL
             customerData = new CustomerData(new CustomerRepository());
         }
 
-        public Response register(string customerName, string birthDate, string zip)
+        public Response register(string customerName, DateTime birthDate, string zip)
         {
-            string format = "dd/MM/yyyy";
+            /*string format = "dd/MM/yyyy";
             DateTime bdate;
             if (!DateTime.TryParseExact(birthDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out bdate))
                 return Response.INVALID_DATE;
 
             if (DateTime.Compare(bdate, DateTime.Now) > 0)
-                return Response.IREAL_BIRTH;
+                return Response.IREAL_BIRTH;*/
 
-            if (!zip.Equals(""))
+            if (!String.IsNullOrEmpty(zip))
+            {
                 if (zip.Length != 5 || !int.TryParse(zip, out _))
                     return Response.INVALID_ZIP;
+            }
+            else zip = "";
 
-            if (customerData.register(new Customer(customerName, bdate, zip), db) == 0)
+            if (customerData.register(new Customer(customerName, birthDate, zip), db) == 0)
                 return Response.DATABASE_ERROR;
 
             return Response.SUCCESS;
         }
 
-        public Response update(string customerId, string customerName, string birthDate, string zip)
+        public Response update(int customerId, string customerName, DateTime birthDate, string zip)
         {
-            if (!int.TryParse(customerId, out int id))
-                return Response.INCORRECT_ID;
+            /*if (!int.TryParse(customerId, out int id))
+                return Response.INCORRECT_ID;*/
 
-            if (!customerData.verifyCustomer(id, db))
+            if (!customerData.verifyCustomer(customerId, db))
                 return Response.INEXISTENT_CUSTOMER;
 
-            string format = "dd/MM/yyyy";
+            /*string format = "dd/MM/yyyy";
             DateTime bdate;
             if (!DateTime.TryParseExact(birthDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out bdate))
-                return Response.INVALID_DATE;
+                return Response.INVALID_DATE;*/
 
-            if (DateTime.Compare(bdate, DateTime.Now) > 0)
+            if (DateTime.Compare(birthDate, DateTime.Now) > 0)
                 return Response.IREAL_BIRTH;
 
-            if (!zip.Equals(""))
+            if (!String.IsNullOrEmpty(zip)) {
                 if (zip.Length != 5 || !int.TryParse(zip, out _))
                     return Response.INVALID_ZIP;
+            }
+            else zip = "";
 
 
-            if (!customerData.update(new Customer(id ,customerName, bdate, zip), db))
+            if (!customerData.update(new Customer(customerId ,customerName, birthDate, zip), db))
                 return Response.DATABASE_ERROR;
 
             return Response.SUCCESS;
         }
 
-        public Response removeCustomer(string customerId) {
-            if (!int.TryParse(customerId, out int id))
-                return Response.INCORRECT_ID;
-            bool result = customerData.remove(id, db);
+        public Response removeCustomer(int customerId) {
+            /*if (!int.TryParse(customerId, out int id))
+                return Response.INCORRECT_ID;*/
+            bool result = customerData.remove(customerId, db);
 
             return (result ? Response.SUCCESS : Response.INEXISTENT_CUSTOMER);
         }
@@ -82,6 +87,11 @@ namespace RentC_MVC.BLL
         public List<Customer> list(int orderBy, string ascendent)
         {
             return customerData.list(orderBy, ascendent, db);
+        }
+
+        public Customer findById(int id)
+        {
+            return customerData.findById(id, db);
         }
     }
 }

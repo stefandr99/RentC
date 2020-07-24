@@ -13,5 +13,6 @@ namespace RentC_MVC.Repositories
         bool remove(int id, DbConnection db);
         List<T> list(int orderBy, string ascendent, DbConnection db);
         bool update(T obj, DbConnection db);
+        T findById(int id, DbConnection db);
     }
 }

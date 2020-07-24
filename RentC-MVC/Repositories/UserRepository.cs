@@ -71,5 +71,30 @@ namespace RentC_MVC.Repositories
         public bool update(User obj, DbConnection db) {
             throw new NotImplementedException();
         }
+
+        public User findById(int id, DbConnection db)
+        {
+            string query = "SELECT * FROM Users c WHERE c.UserID = " + id + "";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        if (reader.Read())
+                        {
+                            User user = new User(reader.GetInt32(0), reader.GetString(1),
+                                reader.GetBoolean(2), reader.GetInt32(3));
+                            db.getDbConnection().Close();
+                            return user;
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }
     }
 }

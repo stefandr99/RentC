@@ -28,24 +28,23 @@ namespace RentC_MVC.BLL
             couponData = new CouponData();
         }
 
-        public Response register(string plate, string customerId, string startDate, string endDate, string city)
+        public Response register(int carId, int customerId, DateTime startDate, DateTime endDate, string city)
         {
-            if (!int.TryParse(customerId, out int id))
-                return Response.INCORRECT_ID;
-            if (!carData.verifyExistenceCar(plate, db))
+            /*if (!int.TryParse(customerId, out int id))
+                return Response.INCORRECT_ID;*/
+            if (!carData.verifyExistenceCar(carId, db))
                 return Response.INEXISTENT_CAR;
 
-            if (!carData.verifyAvailableCar(plate, db))
+            if (!carData.verifyAvailableCar(carId, db))
                 return Response.UNAVAILABLE_CAR;
 
-            int carId = carData.verifyCarLocationAndGetId(plate, city, db);
             if (carId == 0)
                 return Response.UNAVAILABLE_CAR_IN_CITY;
 
-            if (!customerData.verifyCustomer(id, db))
+            if (!customerData.verifyCustomer(customerId, db))
                 return Response.INEXISTENT_CUSTOMER;
 
-            string format = "dd/MM/yyyy";
+            /*string format = "dd/MM/yyyy";
             DateTime sDate, eDate;
             if (!DateTime.TryParseExact(startDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out sDate))
@@ -53,43 +52,43 @@ namespace RentC_MVC.BLL
 
             if (!DateTime.TryParseExact(endDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out eDate))
-                return Response.INVALID_DATE;
+                return Response.INVALID_DATE;*/
 
-            if (DateTime.Compare(sDate, eDate) > 0)
+            if (DateTime.Compare(startDate, endDate) > 0)
                 return Response.INVERSED_DATES;
 
-            if (DateTime.Compare(sDate, DateTime.Now) < 0)
+            if (DateTime.Compare(startDate, DateTime.Now) < 0)
                 return Response.INCORRECT_SDATE;
 
             string coupon = couponData.getCoupon(db);
 
             if (reservationData.register(
-                new Reservation(carId, id, sDate, eDate, city, coupon), db) == 0)
+                new Reservation(carId, customerId, startDate, endDate, city, coupon), db) == 0)
                 return Response.DATABASE_ERROR;
 
             return Response.SUCCESS;
         }
 
-        public Response update(string carId, string startDate, string endDate) {
-            if (!int.TryParse(carId, out int id))
-                return Response.INCORRECT_ID;
-            if (!reservationData.verifyReservation(id, db))
+        public Response update(int carId, DateTime startDate, DateTime endDate) {
+            /*if (!int.TryParse(carId, out int id))
+                return Response.INCORRECT_ID;*/
+            if (!reservationData.verifyReservation(carId, db))
                 return Response.INEXISTENT_RESERVATION;
 
-            string format = "dd/MM/yyyy";
+            /*string format = "dd/MM/yyyy";
             DateTime sDate, eDate;
             if (!DateTime.TryParseExact(startDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out sDate))
                 return Response.INVALID_DATE;
             if (!DateTime.TryParseExact(endDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out eDate))
-                return Response.INVALID_DATE;
-            if (DateTime.Compare(sDate, eDate) > 0)
+                return Response.INVALID_DATE;*/
+            if (DateTime.Compare(startDate, endDate) > 0)
                 return Response.INVERSED_DATES;
-            if (DateTime.Compare(sDate, DateTime.Now) > 0)
+            if (DateTime.Compare(startDate, DateTime.Now) > 0)
                 return Response.INCORRECT_SDATE;
 
-            if (!reservationData.update(new Reservation(id, sDate, eDate), db))
+            if (!reservationData.update(new Reservation(carId, startDate, endDate), db))
                 return Response.DATABASE_ERROR;
 
             return Response.SUCCESS;
@@ -99,13 +98,18 @@ namespace RentC_MVC.BLL
             return reservationData.list(orderBy, ascendent, db);
         }
 
-        public Response cancelReservation(string identifyId) {
-            if (!int.TryParse(identifyId, out int id))
-                return Response.INCORRECT_ID;
+        public Reservation findById(int id)
+        {
+            return reservationData.findById(id, db);
+        }
 
-            if (!reservationData.verifyReservation(id, db))
+        public Response cancelReservation(int identifyId) {
+            /*if (!int.TryParse(identifyId, out int id))
+                return Response.INCORRECT_ID;*/
+
+            if (!reservationData.verifyReservation(identifyId, db))
                 return Response.INEXISTENT_RESERVATION;
-            if (!reservationData.remove(id, db))
+            if (!reservationData.remove(identifyId, db))
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }

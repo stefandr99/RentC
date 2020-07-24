@@ -92,5 +92,30 @@ namespace RentC_MVC.Repositories
                 return result;
             }
         }
+
+        public Reservation findById(int id, DbConnection db)
+        {
+            string query = "SELECT * FROM Reservations c WHERE c.CarID = " + id + " OR CustomerID = " + id + "";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        if (reader.Read())
+                        {
+                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1),
+                                reader.GetDateTime(3), reader.GetDateTime(4), reader.GetString(5));
+                            db.getDbConnection().Close();
+                            return reservation;
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }
     }
 }

@@ -22,15 +22,15 @@ namespace RentC_MVC.BLL
             carData = new CarData(new CarRepository());
         }
 
-        public Response register(string plate, string manufacturer, string model, string pricePerDay, string city)
+        public Response register(string plate, string manufacturer, string model, decimal pricePerDay, string city)
         {
             if (plate.Equals("") || manufacturer.Equals("") || model.Equals("") || city.Equals(""))
                 return Response.UNFILLED_FIELDS;
 
-            if (!decimal.TryParse(pricePerDay, out decimal price))
-                return Response.INCORRECT_PRICE;
+            /*if (!decimal.TryParse(pricePerDay, out decimal price))
+                return Response.INCORRECT_PRICE;*/
 
-            int result = carData.register(new Car(plate, manufacturer, model, price, city), db);
+            int result = carData.register(new Car(plate, manufacturer, model, pricePerDay, city), db);
             switch (result)
             {
                 case 0:
@@ -43,7 +43,7 @@ namespace RentC_MVC.BLL
             }
         }
 
-        public Response remove(string carId)
+        public Response remove(int carId)
         {
             if (!int.TryParse(carId, out int id))
                 return Response.INCORRECT_ID;
@@ -55,6 +55,20 @@ namespace RentC_MVC.BLL
         public List<Car> listAvailable(int orderBy, string ascendent)
         {
             return carData.list(orderBy, ascendent, db);
+        }
+
+        public Response update(int id, string plate, string manufacturer, string model, decimal pricePerDay, string city) {
+            if(!carData.verifyExistenceCar(id, db))
+                return Response.INEXISTENT_CAR;
+
+            if (!carData.update(new Car(id, plate, manufacturer, model, pricePerDay, city), db))
+                return Response.DATABASE_ERROR;
+
+            return Response.SUCCESS;
+        }
+
+        public Car findById(int id) {
+            return carData.findById(id, db);
         }
 
         public List<Car> listMostRecentCars() {

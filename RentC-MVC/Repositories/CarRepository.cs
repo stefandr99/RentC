@@ -123,5 +123,28 @@ namespace RentC_MVC.Repositories
                 }
             }
         }
+
+        public Car findById(int id, DbConnection db) {
+            string query = "SELECT * FROM Cars c WHERE c.CarID = " + id + "";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows) {
+                        if (reader.Read())
+                        {
+                            Car car = new Car(reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
+                                reader.GetString(3), reader.GetDecimal(4), reader.GetString(5));
+                            db.getDbConnection().Close();
+                            return car;
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }
     }
 }

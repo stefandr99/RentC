@@ -97,5 +97,30 @@ namespace RentC_MVC.Repositories
                 return result;
             }
         }
+
+        public Customer findById(int id, DbConnection db)
+        {
+            string query = "SELECT * FROM Customers c WHERE c.CustomerID = " + id + "";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        if (reader.Read())
+                        {
+                            Customer customer = new Customer(reader.GetInt32(0), reader.GetString(1), reader.GetDateTime(2),
+                                reader.GetString(3), reader.GetString(4));
+                            db.getDbConnection().Close();
+                            return customer;
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }
     }
 }

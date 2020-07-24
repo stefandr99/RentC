@@ -29,6 +29,10 @@ namespace RentC_MVC.DAL
             return customerRepository.list(orderBy, ascendent, db);
         }
 
+        public Customer findById(int id, DbConnection db) {
+            return customerRepository.findById(id, db);
+        }
+
         public bool verifyCustomer(int customerId, DbConnection db)
         {
             string query = "SELECT * FROM Customers where CustomerID = @id";

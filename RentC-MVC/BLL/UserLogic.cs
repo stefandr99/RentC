@@ -36,18 +36,18 @@ namespace RentC_MVC.BLL
 
         }
 
-        public Response changePassword(string userId, string oldPass, string newPass1, string newPass2) {
-            if (userId.Equals("") || oldPass.Equals("") || newPass1.Equals("")) {
+        public Response changePassword(int userId, string oldPass, string newPass1, string newPass2) {
+            /*if (userId.Equals("") || oldPass.Equals("") || newPass1.Equals("")) {
                 return Response.UNFILLED_FIELDS;
-            }
+            }*/
 
-            if (!int.TryParse(userId, out int id))
-                return Response.INCORRECT_ID;
+            /*if (!int.TryParse(userId, out int id))
+                return Response.INCORRECT_ID;*/
 
 
             if (!newPass1.Equals(newPass2))
                 return Response.NOT_MATCH_PASS;
-            if (!userData.changePassword(id, oldPass, newPass1, db))
+            if (!userData.changePassword(userId, oldPass, newPass1, db))
                 return Response.INCORRECT_OLD_PASS;
             return Response.SUCCESS;
         }
@@ -99,6 +99,11 @@ namespace RentC_MVC.BLL
 
         public List<User> list(int orderBy, string asc) {
             return userData.list(orderBy, asc, db);
+        }
+
+        public User findById(int id)
+        {
+            return userData.findById(id, db);
         }
     }
 }

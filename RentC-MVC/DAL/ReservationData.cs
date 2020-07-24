@@ -25,6 +25,11 @@ namespace RentC_MVC.DAL
             return reservationRepository.update(reservation, db);
         }
 
+        public Reservation findById(int id, DbConnection db)
+        {
+            return reservationRepository.findById(id, db);
+        }
+
         public bool verifyReservation(int reservationId, DbConnection db) {
             string query = "SELECT CustomerID FROM Reservations r WHERE CarID = @id " +
                            "and ReservStatsID = 1";

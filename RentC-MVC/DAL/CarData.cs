@@ -44,6 +44,10 @@ namespace RentC_MVC.DAL
             return carRepository.list(orderBy, ascendent, db);
         }
 
+        public Car findById(int id, DbConnection db) {
+            return carRepository.findById(id, db);
+        }
+
         public List<Car> listMostRecentCars(DbConnection db) {
             string query =
                 "SELECT TOP(10) c.* FROM Cars c JOIN Reservations r ON c.CarID = r.CarID ORDER BY r.StartDate DESC";
@@ -124,11 +128,11 @@ namespace RentC_MVC.DAL
             }
         }
 
-        public bool verifyExistenceCar(string plate, DbConnection db) {
-            string query = "SELECT CarID FROM Cars where Plate = @plate";
+        public bool verifyExistenceCar(int id, DbConnection db) {
+            string query = "SELECT CarID FROM Cars where CarID = @id";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
-                command.Parameters.AddWithValue("@plate", plate);
+                command.Parameters.AddWithValue("@id", id);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     if (reader.HasRows) {
@@ -141,12 +145,12 @@ namespace RentC_MVC.DAL
             }
         }
 
-        public bool verifyAvailableCar(string plate, DbConnection db) {
+        public bool verifyAvailableCar(int id, DbConnection db) {
             string query =
-                "SELECT c.* FROM Cars c LEFT JOIN Reservations r ON c.CarID = r.CarID where c.Plate = @plate";
+                "SELECT c.* FROM Cars c LEFT JOIN Reservations r ON c.CarID = r.CarID where c.CarID = @id";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
-                command.Parameters.AddWithValue("@plate", plate);
+                command.Parameters.AddWithValue("@id", id);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     if (reader.HasRows)
@@ -160,11 +164,11 @@ namespace RentC_MVC.DAL
             }
         }
 
-        public int verifyCarLocationAndGetId(string plate, string location, DbConnection db) {
-            string query = "SELECT CarID FROM Cars where Plate = @plate and City = @location";
+        public int verifyCarLocationAndGetId(int id, string location, DbConnection db) {
+            string query = "SELECT CarID FROM Cars where CarID = @id and City = @location";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
-                command.Parameters.AddWithValue("@plate", plate);
+                command.Parameters.AddWithValue("@id", id);
                 command.Parameters.AddWithValue("@location", location);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {

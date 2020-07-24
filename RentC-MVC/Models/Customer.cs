@@ -1,17 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.ModelBinding;
 
 namespace RentC_MVC.Models
 {
     public class Customer
     {
+        [Display(Name = "Id")]
         public int customerId { get; set; }
+        [Required]
+        [Display(Name = "Name")]
         public string name { get; set; }
+        [Required]
+        [Display(Name = "Birth Day")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public System.DateTime birthDate { get; set; }
+        [Display(Name = "Location")]
         public string location { get; set; }
+        [Display(Name = "ZIP Code")]
+        [MaxLength(5)]
+        [MinLength(5)]
         public string ZIPCode { get; set; }
 
         public Customer()

@@ -97,5 +97,10 @@ namespace RentC_MVC.DAL
         public List<User> list(int orderBy, string ascendent, DbConnection db) {
             return userRepository.list(orderBy, ascendent, db);
         }
+
+        public User findById(int id, DbConnection db)
+        {
+            return userRepository.findById(id, db);
+        }
     }
 }
