@@ -11,12 +11,12 @@ namespace RentC.DAL
 {
     public class UserData
     {
-        public int authUser(int userId, string password, DbConnection db) {
-            string query = "SELECT Password, RoleID FROM Users where UserID = @userId and Enabled = 1";
+        public int authUser(string username, string password, DbConnection db) {
+            string query = "SELECT Password, RoleID FROM Users where Username = @username and Enabled = 1";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@userId", userId);
+                command.Parameters.AddWithValue("@username", username);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     
@@ -34,12 +34,12 @@ namespace RentC.DAL
             }
         }
 
-        public bool changePassword(int userId, string oldPass, string newPass, DbConnection db) {
-            string query = "SELECT UserID FROM Users where UserID = @userId and Password = @password and Enabled = 1";
+        public bool changePassword(string username, string oldPass, string newPass, DbConnection db) {
+            string query = "SELECT UserID FROM Users where Username = @username and Password = @password and Enabled = 1";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@userId", userId);
+                command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", oldPass);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -51,11 +51,11 @@ namespace RentC.DAL
                 }
             }
 
-            query = "UPDATE Users SET Password = @password where UserID = @userId";
+            query = "UPDATE Users SET Password = @password where Username = @username";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@userId", userId);
+                command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", newPass);
 
                 bool result = command.ExecuteNonQuery() > 0;
@@ -66,12 +66,13 @@ namespace RentC.DAL
         }
 
         public int register(User user, DbConnection db) {
-            string query = "INSERT INTO Users VALUES (@password, @enabled, @roleId)";
+            string query = "INSERT INTO Users (Username, Password, Enabled, RoleID) VALUES (@username, @password, @enabled, @roleId)";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
+                command.Parameters.AddWithValue("@username", user.username);
                 command.Parameters.AddWithValue("@password", user.password);
-                command.Parameters.AddWithValue("@enabled", false);
+                command.Parameters.AddWithValue("@enabled", true);
                 command.Parameters.AddWithValue("@roleId", 3);
 
                 db.getDbConnection().Open();
@@ -82,13 +83,13 @@ namespace RentC.DAL
             }
         }
 
-        public bool enableUser(int userId, DbConnection db)
+        public bool enableUser(string username, DbConnection db)
         {
-            string query = "UPDATE Users SET Enabled = 1 where UserID = @userId";
+            string query = "UPDATE Users SET Enabled = 1 where Username = @username";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@userId", userId);
+                command.Parameters.AddWithValue("@username", username);
                 db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;
                 db.getDbConnection().Close();
@@ -97,12 +98,12 @@ namespace RentC.DAL
             }
         }
 
-        public bool remove(int userId, DbConnection db) {
-            string query = "UPDATE Users SET Enabled = 0 where UserID = @userId";
+        public bool remove(string username, DbConnection db) {
+            string query = "UPDATE Users SET Enabled = 0 where Username = @username";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@userId", userId);
+                command.Parameters.AddWithValue("@username", username);
                 db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;
                 db.getDbConnection().Close();
@@ -125,8 +126,8 @@ namespace RentC.DAL
                     {
                         while (reader.Read())
                         {
-                            User user = new User(reader.GetInt32(0), reader.GetString(1), 
-                                reader.GetBoolean(2), reader.GetInt32(3));
+                            User user = new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2), 
+                                reader.GetBoolean(3), reader.GetInt32(4));
                             users.Add(user);
                         }
                     }

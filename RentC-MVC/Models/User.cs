@@ -12,6 +12,9 @@ namespace RentC_MVC.Models
         [Display(Name = "Id")]
         public int userId { get; set; }
         [Required]
+        [Display(Name = "Username")]
+        public string username { get; set; }
+        [Required]
         [Display(Name = "Password")]
         public string password { get; set; }
         [Display(Name = "Enabled?")]
@@ -21,21 +24,23 @@ namespace RentC_MVC.Models
 
         public User() { }
 
-        public User(string password) {
-            this.userId = userId;
+        public User(string username, string password) {
+            this.username = username;
             this.password = password;
         }
 
-        public User(int userId, string password, bool enabled, int roleId)
+        public User(int userId, string username, string password, bool enabled, int roleId)
         {
             this.userId = userId;
+            this.username = username;
             this.password = password;
             this.enabled = enabled;
             this.roleId = roleId;
         }
 
-        public override string ToString() {
-            return "User " + userId + ": " + enabled + "   " + roleId;
+        public override string ToString()
+        {
+            return "User " + userId + ": " + username + "   enabled: " + (enabled ? "yes" : "no") + " being " + (roleId == 1 ? "administrator" : (roleId == 2 ? "manager" : "salesperson"));
         }
     }
 }

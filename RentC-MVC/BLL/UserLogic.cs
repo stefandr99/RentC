@@ -20,14 +20,12 @@ namespace RentC_MVC.BLL
             db = DbConnection.getInstance;
         }
 
-        public Response authUser(string userId, string password) {
-            if (userId.Equals("") || password.Equals("")) {
+        public Response authUser(string username, string password) {
+            if (username.Equals("") || password.Equals("")) {
                 return Response.UNFILLED_FIELDS;
             }
 
-            if (!int.TryParse(userId, out int id))
-                return Response.INCORRECT_ID;
-            int res = userData.authUser(id, password, db);
+            int res = userData.authUser(username, password, db);
             return res == 0
                 ? Response.INCORRECT_CREDENTIALS
                 : (res == 1
@@ -52,12 +50,12 @@ namespace RentC_MVC.BLL
             return Response.SUCCESS;
         }
 
-        public Response registerSaleperson(string password) {
+        public Response registerSaleperson(string username, string password) {
             if (password.Equals("")) {
                 return Response.UNFILLED_FIELDS;
             }
 
-            if (userData.register(new User(password), db) == 0)
+            if (userData.register(new User(username, password), db) == 0)
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }

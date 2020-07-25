@@ -180,12 +180,12 @@ namespace RentC.Presentation
 
         public void authUser() {
             while (true) {
-                Console.Write("User Id: ");
-                string userId = Console.ReadLine();
+                Console.Write("Username: ");
+                string username = Console.ReadLine();
                 Console.Write("Password: ");
                 string pass = Console.ReadLine();
 
-                response = logic.user.authUser(userId, pass);
+                response = logic.user.authUser(username, pass);
 
                 if (response != Response.SUCCESS_ADMIN && response != Response.SUCCESS_MANAGER &&
                     response != Response.SUCCESS_SALESPERSON) {
@@ -205,8 +205,8 @@ namespace RentC.Presentation
 
         public void changePassword()
         {
-            Console.Write("User Id: ");
-            string userId = Console.ReadLine();
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
             Console.Write("Old Password: ");
             string oldPass = Console.ReadLine();
             Console.Write("New Password: ");
@@ -214,7 +214,7 @@ namespace RentC.Presentation
             Console.Write("Confirm New Password: ");
             string newPass2 = Console.ReadLine();
 
-            response = logic.user.changePassword(userId, oldPass, newPass1, newPass2);
+            response = logic.user.changePassword(username, oldPass, newPass1, newPass2);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Password changed with success.");
             else getMessage(response);
@@ -224,10 +224,12 @@ namespace RentC.Presentation
 
         public void registerSaleperson()
         {
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
             Console.Write("Password: ");
             string pass = Console.ReadLine();
 
-            response = logic.user.registerSaleperson(pass);
+            response = logic.user.registerSaleperson(username, pass);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Salesperson registered with success.");
             else getMessage(response);
@@ -237,10 +239,10 @@ namespace RentC.Presentation
 
         public void enableUser()
         {
-            Console.Write("User Id: ");
-            string id = Console.ReadLine();
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
 
-            response = logic.user.enableUser(id);
+            response = logic.user.enableUser(username);
             if (response == Response.SUCCESS)
                 Console.WriteLine("User enabled with success.");
             else getMessage(response);
@@ -250,10 +252,10 @@ namespace RentC.Presentation
 
         public void disableUser()
         {
-            Console.Write("User Id: ");
-            string id = Console.ReadLine();
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
 
-            response = logic.user.disableUser(id);
+            response = logic.user.disableUser(username);
             if (response == Response.SUCCESS)
                 Console.WriteLine("User disabled with success.");
             else getMessage(response);

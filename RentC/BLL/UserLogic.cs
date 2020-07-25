@@ -19,14 +19,12 @@ namespace RentC.BLL
             db = DbConnection.getInstance;
         }
 
-        public Response authUser(string userId, string password) {
-            if (userId.Equals("") || password.Equals("")) {
+        public Response authUser(string username, string password) {
+            if (username.Equals("") || password.Equals("")) {
                 return Response.UNFILLED_FIELDS;
             }
 
-            if (!int.TryParse(userId, out int id))
-                return Response.INCORRECT_ID;
-            int res = userData.authUser(id, password, db);
+            int res = userData.authUser(username, password, db);
             return res == 0
                 ? Response.INCORRECT_CREDENTIALS
                 : (res == 1
@@ -35,42 +33,37 @@ namespace RentC.BLL
 
         }
 
-        public Response changePassword(string userId, string oldPass, string newPass1, string newPass2) {
-            if (userId.Equals("") || oldPass.Equals("") || newPass1.Equals("")) {
+        public Response changePassword(string username, string oldPass, string newPass1, string newPass2) {
+            if (username.Equals("") || oldPass.Equals("") || newPass1.Equals("")) {
                 return Response.UNFILLED_FIELDS;
             }
-
-            if (!int.TryParse(userId, out int id))
-                return Response.INCORRECT_ID;
 
 
             if (!newPass1.Equals(newPass2))
                 return Response.NOT_MATCH_PASS;
-            if (!userData.changePassword(id, oldPass, newPass1, db))
+            if (!userData.changePassword(username, oldPass, newPass1, db))
                 return Response.INCORRECT_OLD_PASS;
             return Response.SUCCESS;
         }
 
-        public Response registerSaleperson(string password) {
-            if (password.Equals("")) {
+        public Response registerSaleperson(string username, string password) {
+            if (password.Equals("") || username.Equals("")) {
                 return Response.UNFILLED_FIELDS;
             }
 
-            if (userData.register(new User(password), db) == 0)
+            if (userData.register(new User(username, password), db) == 0)
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }
 
-        public Response enableUser(string userId)
+        public Response enableUser(string username)
         {
-            if (userId.Equals("")) {
+            if (username.Equals("")) {
                 return Response.UNFILLED_FIELDS;
             }
 
-            if (!int.TryParse(userId, out int id))
-                return Response.INCORRECT_ID;
-
-            if (!userData.enableUser(id, db))
+            
+            if (!userData.enableUser(username, db))
             {
                 return Response.DATABASE_ERROR;
             }
@@ -78,17 +71,14 @@ namespace RentC.BLL
             return Response.SUCCESS;
         }
 
-        public Response disableUser(string userId)
+        public Response disableUser(string username)
         {
-            if (userId.Equals(""))
+            if (username.Equals(""))
             {
                 return Response.UNFILLED_FIELDS;
             }
 
-            if (!int.TryParse(userId, out int id))
-                return Response.INCORRECT_ID;
-
-            if (!userData.remove(id, db))
+            if (!userData.remove(username, db))
             {
                 return Response.DATABASE_ERROR;
             }

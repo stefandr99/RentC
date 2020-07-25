@@ -12,12 +12,13 @@ namespace RentC_MVC.Repositories
     public class UserRepository : IRepository<User>
     {
         public int register(User user, DbConnection db) {
-            string query = "INSERT INTO Users VALUES (@password, @enabled, @roleId)";
+            string query = "INSERT INTO Users (Username, Password, Enabled, RoleID) VALUES (@username, @password, @enabled, @roleId)";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
+                command.Parameters.AddWithValue("@password", user.username);
                 command.Parameters.AddWithValue("@password", user.password);
-                command.Parameters.AddWithValue("@enabled", false);
+                command.Parameters.AddWithValue("@enabled", true);
                 command.Parameters.AddWithValue("@roleId", 3);
 
                 db.getDbConnection().Open();
@@ -56,8 +57,8 @@ namespace RentC_MVC.Repositories
                     {
                         while (reader.Read())
                         {
-                            User user = new User(reader.GetInt32(0), reader.GetString(1), 
-                                reader.GetBoolean(2), reader.GetInt32(3));
+                            User user = new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
+                                reader.GetBoolean(3), reader.GetInt32(4));
                             users.Add(user);
                         }
                     }
@@ -85,8 +86,8 @@ namespace RentC_MVC.Repositories
                     {
                         if (reader.Read())
                         {
-                            User user = new User(reader.GetInt32(0), reader.GetString(1),
-                                reader.GetBoolean(2), reader.GetInt32(3));
+                            User user = new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
+                                reader.GetBoolean(3), reader.GetInt32(4));
                             db.getDbConnection().Close();
                             return user;
                         }

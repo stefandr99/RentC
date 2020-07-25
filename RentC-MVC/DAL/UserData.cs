@@ -17,12 +17,12 @@ namespace RentC_MVC.DAL
         public UserData(IRepository<User> user) {
             userRepository = user;
         }
-        public int authUser(int userId, string password, DbConnection db) {
-            string query = "SELECT Password, RoleID FROM Users where UserID = @userId and Enabled = 1";
+        public int authUser(string username, string password, DbConnection db) {
+            string query = "SELECT Password, RoleID FROM Users where Username = @username and Enabled = 1";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@userId", userId);
+                command.Parameters.AddWithValue("@username", username);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     
