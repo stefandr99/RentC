@@ -14,7 +14,7 @@ namespace RentC_MVC.Models
         [Required]
         [Display(Name = "Password")]
         public string password { get; set; }
-        [Display(Name = "Is Enabled?")]
+        [Display(Name = "Enabled?")]
         public bool enabled { get; set; }
         [Display(Name = "Role Id")]
         public int roleId { get; set; }

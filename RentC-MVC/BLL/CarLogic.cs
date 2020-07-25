@@ -45,10 +45,10 @@ namespace RentC_MVC.BLL
 
         public Response remove(int carId)
         {
-            if (!int.TryParse(carId, out int id))
-                return Response.INCORRECT_ID;
+            /*if (!int.TryParse(carId, out int id))
+                return Response.INCORRECT_ID;*/
 
-            bool result = carData.remove(id, db);
+            bool result = carData.remove(carId, db);
             return result ? Response.SUCCESS : Response.INEXISTENT_CAR;
         }
 

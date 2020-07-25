@@ -1,57 +1,50 @@
-﻿@model IEnumerable< Tuple<int, RentC_MVC.Models.Car>>
+﻿@using RentC_MVC.Controllers
 
 @{
-    ViewBag.Title = "ListMostRentedByMonth";
+    ViewBag.Title = "Month and year";
 }
 
-<h2>Most rented cars by month</h2>
+<h2>Enter month and year</h2>
 
-<p>
-    @Html.ActionLink("Back to main page", "Index", "Home")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            Rents
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Item2.plate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Item2.manufacturer)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Item2.model)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Item2.pricePerDay)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Item2.city)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Item1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Item2.manufacturer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Item2.model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Item2.pricePerDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Item2.city)
-            </td>
-            <td>
-            </td>
-        </tr>
-    }
+@using (Html.BeginForm("ListLessRentedByMonth2", "Car"))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Date</h4>
+        <hr />
 
-</table>
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <b>Month</b>
+            </div>
+            <div class="col-md-10">
+                <input type="text" name="month" placeholder="Month" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                <b>Year</b> 
+            </div>
+            <div class="col-md-10">
+                <input type="text" name="year" placeholder="Year" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Submit" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to main menu", "Index", "Home")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

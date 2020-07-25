@@ -69,13 +69,12 @@ namespace RentC_MVC.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult Disable(int id)
+        public void UserActivity(int id, bool decision)
         {
             User user = logic.user.findById(id);
-            if (user == null)
-                return HttpNotFound();
-            logic.user.disableUser(id);
-            return RedirectToAction("List");
+            if (decision)
+                logic.user.enableUser(id);
+            else logic.user.disableUser(id);
         }
 
     }
