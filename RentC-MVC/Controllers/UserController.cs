@@ -38,7 +38,7 @@ namespace RentC_MVC.Controllers
             }
             else
             {
-                logic.user.registerSaleperson(user.password);
+                logic.user.registerSaleperson(user.username, user.password);
                 return RedirectToAction("List");
             }
         }
@@ -66,7 +66,7 @@ namespace RentC_MVC.Controllers
                     return View(userToEdit);
             }
 
-            return RedirectToAction("List");
+            return RedirectToAction("Index", "Home");
         }
 
         public void UserActivity(int id, bool decision)
@@ -77,5 +77,29 @@ namespace RentC_MVC.Controllers
             else logic.user.disableUser(id);
         }
 
+        public ActionResult Login() {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Login(User user) {
+            int id;
+            if ((id = logic.user.authUser(user.username, user.password)) == 0) {
+                user.incorrectCredentials = "Invalid username or password.";
+                return View("Login", user);
+            }
+            else {
+                Session["userId"] = id;
+                Console.WriteLine(Session["userId"]);
+                Console.WriteLine(int.TryParse(Session["userId"].ToString(), out _));
+                Session["roleId"] = logic.user.getRoleId(user.username);
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public ActionResult logout() {
+            Session.Abandon();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

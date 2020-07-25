@@ -18,22 +18,46 @@ namespace RentC_MVC.DAL
             userRepository = user;
         }
         public int authUser(string username, string password, DbConnection db) {
-            string query = "SELECT Password, RoleID FROM Users where Username = @username and Enabled = 1";
+            string query = "SELECT UserID FROM Users where Username = @username AND Password = @password AND Enabled = 1";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                command.Parameters.AddWithValue("@username", username);
+                command.Parameters.AddWithValue("@password", password);
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader()) {
+                    if (reader.HasRows) {
+                        if (reader.Read()) {
+                            int res = reader.GetInt32(0);
+                            db.getDbConnection().Close();
+                            return res;
+                        }
+                    }
+                    db.getDbConnection().Close();
+                    return 0;
+                }
+            }
+        }
+
+        public int getRoleId(string username, DbConnection db)
+        {
+            string query = "SELECT RoleID FROM Users where Username = @username";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
                 command.Parameters.AddWithValue("@username", username);
                 db.getDbConnection().Open();
-                using (SqlDataReader reader = command.ExecuteReader()) {
-                    
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
                     if (reader.HasRows)
-                        if (reader.Read()) {
-                            if (password.Equals(reader.GetString(0))) {
-                                int res = reader.GetInt32(1);
-                                db.getDbConnection().Close();
-                                return res;
-                            }
+                    {
+                        if (reader.Read())
+                        {
+                            int res = reader.GetInt32(0);
+                            db.getDbConnection().Close();
+                            return res;
                         }
+                    }
                     db.getDbConnection().Close();
                     return 0;
                 }

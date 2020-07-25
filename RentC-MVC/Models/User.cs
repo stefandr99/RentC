@@ -16,11 +16,13 @@ namespace RentC_MVC.Models
         public string username { get; set; }
         [Required]
         [Display(Name = "Password")]
+        [DataType(DataType.Password)]
         public string password { get; set; }
-        [Display(Name = "Enabled?")]
+        [Display(Name = "Enabled")]
         public bool enabled { get; set; }
         [Display(Name = "Role Id")]
         public int roleId { get; set; }
+        public string incorrectCredentials { get; set; }
 
         public User() { }
 

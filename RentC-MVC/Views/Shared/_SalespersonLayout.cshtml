@@ -27,10 +27,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Register Reservation", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Cancel Reservation   ", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Edit Reservation   ", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Show Reservations", "Index", "Home")</li>
+                            <li>@Html.ActionLink("Reservations", "List", "Reservation")</li>
                         </ul>
                     </li>
 
@@ -40,17 +37,17 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Show Most Recent Rented Cars", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Show Most Rented Cars by Month", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Show Less Rented Cars by Month", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Show Gold Customers", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Show Silver Customers", "Index", "Home")</li>
+                            <li>@Html.ActionLink("Show Most Recent Rented Cars", "ListMostRecentCars", "Car")</li>
+                            <li>@Html.ActionLink("Show Most Rented Cars by Month", "ListMostRentedByMonth", "Car")</li>
+                            <li>@Html.ActionLink("Show Less Rented Cars by Month", "ListLessRentedByMonth", "Car")</li>
+                            <li>@Html.ActionLink("Show Gold Customers", "GoldCustomers", "Customer")</li>
+                            <li>@Html.ActionLink("Show Silver Customers", "SilverCustomers", "Customer")</li>
                         </ul>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("Change Password", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Logout", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Change Password", "ChangePass", "User", new { id = int.TryParse(HttpContext.Current.Session["userId"].ToString(), out _) }, "")</li>
+                    <li>@Html.ActionLink("Logout", "Logout", "User")</li>
                 </ul>
             </div>
         </div>
@@ -59,7 +56,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - RentC</p>
         </footer>
     </div>
 

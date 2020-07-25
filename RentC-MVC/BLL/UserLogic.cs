@@ -20,18 +20,13 @@ namespace RentC_MVC.BLL
             db = DbConnection.getInstance;
         }
 
-        public Response authUser(string username, string password) {
-            if (username.Equals("") || password.Equals("")) {
-                return Response.UNFILLED_FIELDS;
-            }
+        public int authUser(string username, string password) {
+            return userData.authUser(username, password, db);
+        }
 
-            int res = userData.authUser(username, password, db);
-            return res == 0
-                ? Response.INCORRECT_CREDENTIALS
-                : (res == 1
-                    ? Response.SUCCESS_ADMIN
-                    : (res == 2 ? Response.SUCCESS_MANAGER : Response.SUCCESS_SALESPERSON));
-
+        public int getRoleId(string username)
+        {
+            return userData.getRoleId(username, db);
         }
 
         public Response changePassword(int userId, string oldPass, string newPass1, string newPass2) {

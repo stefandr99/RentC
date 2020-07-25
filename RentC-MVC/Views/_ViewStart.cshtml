@@ -1,3 +1,18 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    if (Session["userId"] == null) {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else {
+        int.TryParse(HttpContext.Current.Session["roleId"].ToString(), out int role);
+        Console.WriteLine(role);
+        if (role == 1) {
+            Layout = "~/Views/Shared/_AdminLayout.cshtml";
+        }
+        else if (role == 2) {
+            Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+        }
+        else {
+            Layout = "~/Views/Shared/_SalespersonLayout.cshtml";
+        }
+    }
 }
