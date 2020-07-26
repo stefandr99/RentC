@@ -1,19 +1,22 @@
 ﻿@model IEnumerable<RentC_MVC.Models.Customer>
 
 @{
-    ViewBag.Title = "Customer List";
+    ViewBag.Title = "Customers";
 }
 
-<h2>List</h2>
+<h2>Customers</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Register New", "Create")
 </p>
 <p>
     @Html.ActionLink("Back to main page", "Index", "Home")
 </p>
 <table class="table">
     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.customerId)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.name)
         </th>
@@ -32,6 +35,9 @@
 @foreach (var item in Model) {
     <tr>
         <td>
+            @Html.DisplayFor(modelItem => item.customerId)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.name)
         </td>
         <td>
@@ -44,8 +50,8 @@
             @Html.DisplayFor(modelItem => item.ZIPCode)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.customerId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.customerId })
+            @Html.ActionLink("Edit", "Edit", new {id = item.customerId}) |
+            @Html.ActionLink("Delete", "Delete", new {id = item.customerId})
         </td>
     </tr>
 }

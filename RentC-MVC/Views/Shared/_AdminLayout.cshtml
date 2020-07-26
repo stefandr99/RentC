@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - RentC</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -61,7 +61,7 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("Change Password", "ChangePass", "User", new { id = int.TryParse(HttpContext.Current.Session["userId"].ToString(), out _) }, "")</li>
+                    <li>@Html.ActionLink("Change Password", "ChangePass", "User", new { id = int.TryParse(HttpContext.Current.Session["userId"].ToString(), out int nr) ? nr : 0 }, "")</li>
                     <li>@Html.ActionLink("Logout", "Logout", "User")</li>
                 </ul>
             </div>

@@ -5,11 +5,4 @@
 <div class="jumbotron">
     <h1>RentC</h1>
     <p class="lead">Welcome to RentC ! <br />Your brand new solution to manage and control your company's data without missing anything.</p>
-    
-    <p>@{
-           if (Session["userId"] == null) {
-               Html.ActionLink("Login ", "Index", "Home", new {area = ""}, new {@class = "btn btn-primary btn-lg"});
-           }
-       }</p>
-    
 </div>

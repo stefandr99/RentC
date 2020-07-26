@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<RentC_MVC.Models.Reservation>
 
 @{
-    ViewBag.Title = "Reservations list";
+    ViewBag.Title = "Reservations";
 }
 
 <h2>Reservations</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Register New", "Create")
 </p>
 <p>
     @Html.ActionLink("Back to main page", "Index", "Home")
@@ -62,9 +62,8 @@
             @Html.DisplayFor(modelItem => item.couponCode)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            @Html.ActionLink("Edit", "Edit", new {  CarId=item.carId, customerId=item.customerId  }) |
+            @Html.ActionLink("Delete", "Delete", new { CarId = item.carId, customerId = item.customerId })
         </td>
     </tr>
 }

@@ -22,7 +22,15 @@ namespace RentC_MVC.Models
         public bool enabled { get; set; }
         [Display(Name = "Role Id")]
         public int roleId { get; set; }
-        public string incorrectCredentials { get; set; }
+        public string errorMessage { get; set; }
+        [Required]
+        [Display(Name = "New Password")]
+        [DataType(DataType.Password)]
+        public string newPassword { get; set; }
+        [Required]
+        [Display(Name = "Confirm New Password")]
+        [DataType(DataType.Password)]
+        public string confirmNewPassword { get; set; }
 
         public User() { }
 

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using RentC_MVC.BLL;
 using RentC_MVC.Models;
+using RentC_MVC.Util;
 
 namespace RentC_MVC.Controllers
 {
@@ -62,8 +63,15 @@ namespace RentC_MVC.Controllers
                 return HttpNotFound();
             else
             {
-                if (!ModelState.IsValid || logic.user.changePassword(id, userToEdit.password, user.password, user.password) != Util.Response.SUCCESS)
+                Response res = logic.user.changePassword(id, user.password, user.newPassword, user.confirmNewPassword);
+                if (res == Util.Response.NOT_MATCH_PASS) {
+                    userToEdit.errorMessage = "Passwords do not match";
                     return View(userToEdit);
+                }
+                else if (res == Util.Response.INCORRECT_OLD_PASS) {
+                    userToEdit.errorMessage = "Old password is not correct. Is that you?";
+                    return View(userToEdit);
+                }
             }
 
             return RedirectToAction("Index", "Home");
@@ -85,13 +93,11 @@ namespace RentC_MVC.Controllers
         public ActionResult Login(User user) {
             int id;
             if ((id = logic.user.authUser(user.username, user.password)) == 0) {
-                user.incorrectCredentials = "Invalid username or password.";
+                user.errorMessage = "Invalid username or password.";
                 return View("Login", user);
             }
             else {
                 Session["userId"] = id;
-                Console.WriteLine(Session["userId"]);
-                Console.WriteLine(int.TryParse(Session["userId"].ToString(), out _));
                 Session["roleId"] = logic.user.getRoleId(user.username);
                 return RedirectToAction("Index", "Home");
             }

@@ -30,9 +30,12 @@
                 @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
             </div>
         </div>
+
         <div class="form-group">
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.incorrectCredentials, new { @class = "text-danger" })
+            <div class="col-md-offset-2 col-md-10">
+                <div class="text-danger">
+                    @Html.DisplayFor(model => model.errorMessage)
+                </div>
             </div>
         </div>
 
