@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using RentC_MVC.Models;
 using RentC_MVC.Repositories;
@@ -38,7 +39,7 @@ namespace RentC_MVC.BLL
             if (!carData.verifyAvailableCar(carId, db))
                 return Response.UNAVAILABLE_CAR;
 
-            if (carId == 0)
+            if (!carData.verifyCarLocation(carId, city, db))
                 return Response.UNAVAILABLE_CAR_IN_CITY;
 
             if (!customerData.verifyCustomer(customerId, db))
@@ -69,10 +70,10 @@ namespace RentC_MVC.BLL
             return Response.SUCCESS;
         }
 
-        public Response update(int carId, DateTime startDate, DateTime endDate) {
+        public Response update(int carId, int customerId, DateTime startDate, DateTime endDate) {
             /*if (!int.TryParse(carId, out int id))
                 return Response.INCORRECT_ID;*/
-            if (!reservationData.verifyReservation(carId, db))
+            if (!reservationData.verifyReservation(carId, customerId, db))
                 return Response.INEXISTENT_RESERVATION;
 
             /*string format = "dd/MM/yyyy";
@@ -85,10 +86,10 @@ namespace RentC_MVC.BLL
                 return Response.INVALID_DATE;*/
             if (DateTime.Compare(startDate, endDate) > 0)
                 return Response.INVERSED_DATES;
-            if (DateTime.Compare(startDate, DateTime.Now) > 0)
+            if (!(DateTime.Compare(startDate, DateTime.Now) <= 0 && DateTime.Compare(endDate, DateTime.Now) > 0))
                 return Response.INCORRECT_SDATE;
 
-            if (!reservationData.update(new Reservation(carId, startDate, endDate), db))
+            if (!reservationData.update(new Reservation(carId, customerId, startDate, endDate), db))
                 return Response.DATABASE_ERROR;
 
             return Response.SUCCESS;
@@ -98,18 +99,18 @@ namespace RentC_MVC.BLL
             return reservationData.list(orderBy, ascendent, db);
         }
 
-        public Reservation findById(int id)
+        public Reservation findById(int carId, int customerId)
         {
-            return reservationData.findById(id, db);
+            return reservationData.findById(carId, customerId, db);
         }
 
-        public Response cancelReservation(int identifyId) {
+        public Response cancelReservation(int carId, int customerId) {
             /*if (!int.TryParse(identifyId, out int id))
                 return Response.INCORRECT_ID;*/
 
-            if (!reservationData.verifyReservation(identifyId, db))
+            if (!reservationData.verifyReservation(carId, customerId, db))
                 return Response.INEXISTENT_RESERVATION;
-            if (!reservationData.remove(identifyId, db))
+            if (!reservationData.remove(carId, customerId, db))
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }

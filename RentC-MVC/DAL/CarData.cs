@@ -1,6 +1,6 @@
 ﻿using RentC_MVC.Util;
 using RentC_MVC.Models;
-using System;
+using System; 
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -164,7 +164,7 @@ namespace RentC_MVC.DAL
             }
         }
 
-        public int verifyCarLocationAndGetId(int id, string location, DbConnection db) {
+        public bool verifyCarLocation(int id, string location, DbConnection db) {
             string query = "SELECT CarID FROM Cars where CarID = @id and City = @location";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
@@ -172,15 +172,14 @@ namespace RentC_MVC.DAL
                 command.Parameters.AddWithValue("@location", location);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
-                    if (reader.HasRows)
-                        if (reader.Read()) {
-                            int result = reader.GetInt32(0);
-                            db.getDbConnection().Close();
-                            return result;
-                        }
+                    if (reader.HasRows) {
+                        db.getDbConnection().Close();
+                        return true;
+                    }
+
 
                     db.getDbConnection().Close();
-                    return 0;
+                    return false;
                 }
             }
         }

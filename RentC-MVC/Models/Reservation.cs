@@ -19,10 +19,12 @@ namespace RentC_MVC.Models
         public byte reservStatsId { get; set; }
         [Required]
         [Display(Name = "Start Date")]
+        [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public System.DateTime startDate { get; set; }
         [Required]
         [Display(Name = "End Date")]
+        [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public System.DateTime endDate { get; set; }
         [Required]
@@ -51,8 +53,9 @@ namespace RentC_MVC.Models
             this.location = location;
         }
 
-        public Reservation(int carId, System.DateTime startDate, System.DateTime endDate) {
+        public Reservation(int carId, int customerId, System.DateTime startDate, System.DateTime endDate) {
             this.carId = carId;
+            this.customerId = customerId;
             this.startDate = startDate;
             this.endDate = endDate;
         }

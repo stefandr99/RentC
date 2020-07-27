@@ -9,9 +9,6 @@ namespace RentC_MVC.Util
     public enum Response
     {
         SUCCESS,
-        SUCCESS_ADMIN,
-        SUCCESS_MANAGER,
-        SUCCESS_SALESPERSON,
         DATABASE_ERROR,
         UNFILLED_FIELDS,
         ALREADY_CAR,
@@ -29,6 +26,9 @@ namespace RentC_MVC.Util
         INVERSED_DATES,
         INEXISTENT_RESERVATION,
         INCORRECT_PRICE,
-        INCORRECT_SDATE
+        INCORRECT_SDATE,
+        USED_USERNAME,
+        INVALID_PLATE,
+        INVALID_CITY
     }
 }

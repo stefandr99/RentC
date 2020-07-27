@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using RentC_MVC.Models;
@@ -97,6 +98,10 @@ namespace RentC_MVC.BLL
         public User findById(int id)
         {
             return userData.findById(id, db);
+        }
+
+        public Response verifyUsername(string username) {
+            return userData.verifyUsername(username, db) ? Response.USED_USERNAME : Response.SUCCESS;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace RentC_MVC.Controllers
 {
     public class UserController : Controller
     {
-        private Logic logic;
+        private readonly Logic logic;
 
         public UserController()
         {
@@ -33,8 +33,8 @@ namespace RentC_MVC.Controllers
         [HttpPost]
         public ActionResult Create(User user)
         {
-            if (!ModelState.IsValid)
-            {
+            if (logic.user.verifyUsername(user.username) == Util.Response.USED_USERNAME) {
+                user.errorMessage = "This username is already used.";
                 return View(user);
             }
             else

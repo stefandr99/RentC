@@ -3,6 +3,7 @@ using RentC_MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +43,7 @@ namespace RentC_MVC.Repositories
                 command.Parameters.AddWithValue("@name", customer.name);
                 command.Parameters.AddWithValue("@bdate", customer.birthDate);
                 command.Parameters.AddWithValue("@zip", customer.ZIPCode);
+                Debug.WriteLine(customer.birthDate);
 
                 db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;
@@ -66,7 +68,8 @@ namespace RentC_MVC.Repositories
                         while (reader.Read())
                         {
                             Customer customer = new Customer(reader.GetInt32(0), reader.GetString(1),
-                                reader.GetDateTime(2), reader.IsDBNull(3) ? "" : reader.GetString(3), reader.IsDBNull(4) ? "" : reader.GetString(4));
+                                reader.GetDateTime(2), reader.IsDBNull(3) ? "" : reader.GetString(3), 
+                                reader.IsDBNull(4) ? "" : reader.GetString(4));
                             customers.Add(customer);
                         }
                     }
@@ -111,8 +114,9 @@ namespace RentC_MVC.Repositories
                     {
                         if (reader.Read())
                         {
-                            Customer customer = new Customer(reader.GetInt32(0), reader.GetString(1), reader.GetDateTime(2),
-                                reader.GetString(3), reader.GetString(4));
+                            Customer customer = new Customer(reader.GetInt32(0), reader.GetString(1),
+                                reader.GetDateTime(2), reader.IsDBNull(3) ? "" : reader.GetString(3), 
+                                reader.IsDBNull(4) ? "" : reader.GetString(4));
                             db.getDbConnection().Close();
                             return customer;
                         }

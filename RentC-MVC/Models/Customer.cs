@@ -17,7 +17,8 @@ namespace RentC_MVC.Models
         public string name { get; set; }
         [Required]
         [Display(Name = "Birth Day")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public System.DateTime birthDate { get; set; }
         [Display(Name = "Location")]
         public string location { get; set; }

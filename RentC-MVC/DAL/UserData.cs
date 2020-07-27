@@ -126,5 +126,25 @@ namespace RentC_MVC.DAL
         {
             return userRepository.findById(id, db);
         }
+
+        public bool verifyUsername(string username, DbConnection db) {
+            string query = "SELECT UserID FROM Users WHERE Username = @username";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                command.Parameters.AddWithValue("@username", username);
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        db.getDbConnection().Close();
+                        return true;
+                    }
+                }
+            }
+            db.getDbConnection().Close();
+            return false;
+        }
     }
 }

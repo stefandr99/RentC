@@ -25,17 +25,40 @@ namespace RentC_MVC.DAL
             return reservationRepository.update(reservation, db);
         }
 
-        public Reservation findById(int id, DbConnection db)
+        public Reservation findById(int carId, int customerId, DbConnection db)
         {
-            return reservationRepository.findById(id, db);
+            string query = "SELECT * FROM Reservations c WHERE c.CarID = @car and c.CustomerID = @customer";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                command.Parameters.AddWithValue("@car", carId);
+                command.Parameters.AddWithValue("@customer", customerId);
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        if (reader.Read())
+                        {
+                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1),
+                                reader.GetDateTime(3), reader.GetDateTime(4), reader.GetString(5));
+                            db.getDbConnection().Close();
+                            return reservation;
+                        }
+                    }
+                }
+
+                return null;
+            }
         }
 
-        public bool verifyReservation(int reservationId, DbConnection db) {
-            string query = "SELECT CustomerID FROM Reservations r WHERE CarID = @id " +
+        public bool verifyReservation(int carId, int customerId, DbConnection db) {
+            string query = "SELECT CustomerID FROM Reservations r WHERE CarID = @carId AND CustomerID = @customerId" +
                            "and ReservStatsID = 1";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
-                command.Parameters.AddWithValue("@id", reservationId);
+                command.Parameters.AddWithValue("@carId", carId);
+                command.Parameters.AddWithValue("@customerId", customerId);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
 
@@ -56,8 +79,25 @@ namespace RentC_MVC.DAL
         /**
          * Could change status depending of CarID or CustomerID
          */
-        public bool remove(int identifyId,  DbConnection db) {
-            return reservationRepository.remove(identifyId, db);
+        public bool remove(int id,  DbConnection db) {
+            return reservationRepository.remove(id, db);
+        }
+
+        public bool remove(int carId, int customerId, DbConnection db)
+        {
+            string query = "UPDATE Reservation SET ReservStatsID = 3 where CarID = @carId AND CustomerID = @customerId";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                command.Parameters.AddWithValue("@carId", carId);
+                command.Parameters.AddWithValue("@customerId", customerId);
+
+                db.getDbConnection().Open();
+                bool result = command.ExecuteNonQuery() > 0;
+                db.getDbConnection().Close();
+
+                return result;
+            }
         }
 
         public bool expiredReservations(DbConnection db) {

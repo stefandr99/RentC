@@ -3,14 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json.Linq;
 using RentC_MVC.Models;
 
 namespace RentC_MVC.Repositories
 {
     public class CarRepository : IRepository<Car>
     {
+        public HttpClient client = new HttpClient();
+
+        private void webServicesSettings() {
+            client.BaseAddress = new Uri("http://localhost:52900/WebService.asmx/");
+        }
         /**
          * 0 = Database error;
          * 1 = Success;
@@ -87,6 +95,7 @@ namespace RentC_MVC.Repositories
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
+                command.Parameters.AddWithValue("@id", car.carId);
                 command.Parameters.AddWithValue("@plate", car.plate);
                 command.Parameters.AddWithValue("@manufacturer", car.manufacturer);
                 command.Parameters.AddWithValue("@model", car.model);
@@ -102,7 +111,7 @@ namespace RentC_MVC.Repositories
         }
 
         public List<Car> list(int orderBy, string ascendent, DbConnection db) {
-            string query = "SELECT DISTINCT c.* FROM Cars c WHERE c.CarID NOT IN (SELECT ca.CarId FROM Cars ca " +
+            /*string query = "SELECT DISTINCT c.* FROM Cars c WHERE c.CarID NOT IN (SELECT ca.CarId FROM Cars ca " +
                            "JOIN Reservations r ON ca.CarID = r.CarID WHERE r.ReservStatsID = 1)" +
                            " ORDER BY " + orderBy + " " + ascendent;
 
@@ -121,7 +130,25 @@ namespace RentC_MVC.Repositories
                     db.getDbConnection().Close();
                     return cars;
                 }
+            }*/
+            webServicesSettings();
+            HttpResponseMessage message =
+                client.GetAsync("getAvailableCars?orderBy=" + orderBy + "&ascendent=" + ascendent).Result;
+            string carsJson = message.Content.ReadAsStringAsync().Result;
+            JArray obj = Newtonsoft.Json.JsonConvert.DeserializeObject<JArray>(carsJson);
+
+            return convertJsonToList(obj);
+        }
+
+        public List<Car> convertJsonToList(JArray carsArray) {
+            List<Car> cars = new List<Car>();
+            foreach (var result in carsArray) {
+                Car car = new Car((int)result["carId"], (string)result["plate"], (string)result["manufacturer"], 
+                    (string)result["model"], (decimal)result["pricePerDay"], (string)result["city"]);
+                cars.Add(car);
             }
+
+            return cars;
         }
 
         public Car findById(int id, DbConnection db) {

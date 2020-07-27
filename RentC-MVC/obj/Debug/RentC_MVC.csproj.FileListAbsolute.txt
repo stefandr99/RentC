@@ -77,3 +77,8 @@ C:\Users\Stefan\source\repos\RentC\RentC-MVC\bin\Newtonsoft.Json.xml
 C:\Users\Stefan\source\repos\RentC\RentC-MVC\bin\Antlr3.Runtime.pdb
 C:\Users\Stefan\source\repos\RentC\RentC-MVC\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 C:\Users\Stefan\source\repos\RentC\RentC-MVC\obj\Debug\RentC_MVC.csproj.CopyComplete
+C:\Users\Stefan\source\repos\RentC\RentC-MVC\obj\Debug\RentC_MVC.csproj.App.config
+C:\Users\Stefan\source\repos\RentC\RentC-MVC\bin\System.Net.Http.Extensions.dll
+C:\Users\Stefan\source\repos\RentC\RentC-MVC\bin\System.Net.Http.Primitives.dll
+C:\Users\Stefan\source\repos\RentC\RentC-MVC\bin\System.Net.Http.Extensions.xml
+C:\Users\Stefan\source\repos\RentC\RentC-MVC\bin\System.Net.Http.Primitives.xml

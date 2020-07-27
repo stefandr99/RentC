@@ -28,10 +28,10 @@ namespace RentC_MVC.BLL
             DateTime bdate;
             if (!DateTime.TryParseExact(birthDate, format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out bdate))
-                return Response.INVALID_DATE;
+                return Response.INVALID_DATE;*/
 
-            if (DateTime.Compare(bdate, DateTime.Now) > 0)
-                return Response.IREAL_BIRTH;*/
+            if (DateTime.Compare(birthDate, DateTime.Now) > 0)
+                return Response.IREAL_BIRTH;
 
             if (!String.IsNullOrEmpty(zip))
             {
@@ -51,17 +51,15 @@ namespace RentC_MVC.BLL
             /*if (!int.TryParse(customerId, out int id))
                 return Response.INCORRECT_ID;*/
 
-            if (!customerData.verifyCustomer(customerId, db))
-                return Response.INEXISTENT_CUSTOMER;
-
             /*string format = "dd/MM/yyyy";
             DateTime bdate;
-            if (!DateTime.TryParseExact(birthDate, format, new CultureInfo("en-US"),
+            if (!DateTime.TryParseExact(birthDate.ToString(), format, new CultureInfo("en-US"),
                 DateTimeStyles.None, out bdate))
                 return Response.INVALID_DATE;*/
 
-            if (DateTime.Compare(birthDate, DateTime.Now) > 0)
+            if (DateTime.Compare(birthDate, DateTime.Now) > 0) {
                 return Response.IREAL_BIRTH;
+            }
 
             if (!String.IsNullOrEmpty(zip)) {
                 if (zip.Length != 5 || !int.TryParse(zip, out _))

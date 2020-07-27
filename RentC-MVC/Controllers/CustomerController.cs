@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,12 +12,12 @@ namespace RentC_MVC.Controllers
 {
     public class CustomerController : Controller
     {
-        private Logic logic;
+        private readonly Logic logic;
 
         public CustomerController() {
             logic = new Logic();
         }
-        // GET: Customer
+
         public ActionResult List() {
             List<Customer> customers = logic.customer.list(1, "ASC");
             return View(customers);
@@ -29,11 +30,21 @@ namespace RentC_MVC.Controllers
 
         [HttpPost]
         public ActionResult Create(Customer customer) {
+            Response res = logic.customer.register(customer.name, customer.birthDate, customer.ZIPCode);
+
             if (!ModelState.IsValid) {
                 return View(customer);
             }
+            else if (res == Util.Response.IREAL_BIRTH)
+            {
+                ModelState.AddModelError("birthDate", "You cannot be born on this day.");
+                return View(customer);
+            }
+            else if (res == Util.Response.INVALID_ZIP) {
+                ModelState.AddModelError("ZIPCode", "ZIP Code is invalid");
+                return View(customer);
+            }
             else {
-                logic.customer.register(customer.name, customer.birthDate, customer.ZIPCode);
                 return RedirectToAction("List");
             }
         }
@@ -51,14 +62,24 @@ namespace RentC_MVC.Controllers
         public ActionResult Edit(Customer customer, int id) {
             Customer customerToEdit = logic.customer.findById(id);
 
-            if (customerToEdit == null)
-                return HttpNotFound();
-            else {
-                if (!ModelState.IsValid || logic.customer.update(id, customer.name, customer.birthDate, customer.ZIPCode) != Util.Response.SUCCESS)
-                    return View(customerToEdit);
+            Response res = logic.customer.update(id, customer.name, customer.birthDate, customer.ZIPCode);
+            if (!ModelState.IsValid)
+            {
+                return View(customerToEdit);
             }
-
-            return RedirectToAction("List");
+            else if (res == Util.Response.IREAL_BIRTH) {
+                ModelState.AddModelError("birthDate", "You cannot be born on this day.");
+                return View(customerToEdit);
+            }
+            else if (res == Util.Response.INVALID_ZIP)
+            {
+                ModelState.AddModelError("ZIPCode", "ZIP Code is invalid");
+                return View(customerToEdit);
+            }
+            else
+            {
+                return RedirectToAction("List");
+            }
         }
 
         public ActionResult Delete(int id)

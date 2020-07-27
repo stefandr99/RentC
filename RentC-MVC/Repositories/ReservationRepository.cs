@@ -28,7 +28,6 @@ namespace RentC_MVC.Repositories
                 if (!reservation.couponCode.Equals(""))
                     command.Parameters.AddWithValue("@couponCode", reservation.couponCode);
 
-                db.getDbConnection().Close();
                 db.getDbConnection().Open();
                 int result = command.ExecuteNonQuery();
                 db.getDbConnection().Close();
@@ -38,13 +37,15 @@ namespace RentC_MVC.Repositories
         }
 
         public bool update(Reservation reservation, DbConnection db) {
-            string query = "UPDATE Reservations SET StartDate = @start, EndDate = @end, ReservStatsID = 1 WHERE CarID = @id";
+            string query = "UPDATE Reservations SET StartDate = @start, EndDate = @end, ReservStatsID = 1 WHERE CarID = @carId AND " +
+                           "CustomerID = @customerId";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
                 command.Parameters.AddWithValue("@start", reservation.startDate);
                 command.Parameters.AddWithValue("@end", reservation.endDate);
-                command.Parameters.AddWithValue("@id", reservation.carId);
+                command.Parameters.AddWithValue("@carId", reservation.carId);
+                command.Parameters.AddWithValue("@customerId", reservation.customerId);
 
                 db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;
@@ -95,7 +96,7 @@ namespace RentC_MVC.Repositories
 
         public Reservation findById(int id, DbConnection db)
         {
-            string query = "SELECT * FROM Reservations c WHERE c.CarID = " + id + " OR CustomerID = " + id + "";
+            string query = "SELECT * FROM Reservations c WHERE c.CarID = " + id + "";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
@@ -117,5 +118,7 @@ namespace RentC_MVC.Repositories
                 return null;
             }
         }
+
+        
     }
 }
