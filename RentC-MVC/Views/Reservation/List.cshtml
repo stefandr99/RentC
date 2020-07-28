@@ -62,8 +62,8 @@
             @Html.DisplayFor(modelItem => item.couponCode)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new {  CarId=item.carId, customerId=item.customerId  }) |
-            @Html.ActionLink("Delete", "Delete", new { CarId = item.carId, customerId = item.customerId })
+            @Html.ActionLink("Edit", "Edit", new {  CarId=item.carId, CustomerId=item.customerId, StartDate=item.startDate, EndDate=item.endDate  }) |
+            @Html.ActionLink("Delete", "Delete", new { CarId = item.carId, CustomerId = item.customerId, StartDate = item.startDate, EndDate = item.endDate })
         </td>
     </tr>
 }

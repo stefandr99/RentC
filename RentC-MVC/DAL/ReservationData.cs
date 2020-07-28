@@ -25,14 +25,17 @@ namespace RentC_MVC.DAL
             return reservationRepository.update(reservation, db);
         }
 
-        public Reservation findById(int carId, int customerId, DbConnection db)
+        public Reservation findById(int carId, int customerId, DateTime startDate, DateTime endDate, DbConnection db)
         {
-            string query = "SELECT * FROM Reservations c WHERE c.CarID = @car and c.CustomerID = @customer";
+            string query = "SELECT * FROM Reservations c WHERE c.CarID = @car AND c.CustomerID = @customer AND " +
+                           "StartDate = @sdate AND EndDate = @edate";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
                 command.Parameters.AddWithValue("@car", carId);
                 command.Parameters.AddWithValue("@customer", customerId);
+                command.Parameters.AddWithValue("@sdate", startDate);
+                command.Parameters.AddWithValue("@edate", endDate);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -52,13 +55,15 @@ namespace RentC_MVC.DAL
             }
         }
 
-        public bool verifyReservation(int carId, int customerId, DbConnection db) {
-            string query = "SELECT CustomerID FROM Reservations r WHERE CarID = @carId AND CustomerID = @customerId" +
-                           "and ReservStatsID = 1";
+        public bool verifyReservation(int carId, int customerId, DateTime startDate, DateTime endDate, DbConnection db) {
+            string query = "SELECT CustomerID FROM Reservations r WHERE CarID = @carId AND CustomerID = @customerId AND " +
+                           "StartDate = @sdate AND EndDate = @edate AND ReservStatsID = 1";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
                 command.Parameters.AddWithValue("@carId", carId);
                 command.Parameters.AddWithValue("@customerId", customerId);
+                command.Parameters.AddWithValue("@sdate", startDate);
+                command.Parameters.AddWithValue("@edate", endDate);
                 db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader()) {
 
@@ -76,21 +81,22 @@ namespace RentC_MVC.DAL
             return reservationRepository.list(orderBy, ascendent, db);
         }
 
-        /**
-         * Could change status depending of CarID or CustomerID
-         */
+        
         public bool remove(int id,  DbConnection db) {
             return reservationRepository.remove(id, db);
         }
 
-        public bool remove(int carId, int customerId, DbConnection db)
+        public bool remove(int carId, int customerId, DateTime startDate, DateTime endDate, DbConnection db)
         {
-            string query = "UPDATE Reservation SET ReservStatsID = 3 where CarID = @carId AND CustomerID = @customerId";
+            string query = "UPDATE Reservation SET ReservStatsID = 3 where CarID = @carId AND CustomerID = @customerId AND " +
+                           "StartDate = @sdate AND EndDate = @edate";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
                 command.Parameters.AddWithValue("@carId", carId);
                 command.Parameters.AddWithValue("@customerId", customerId);
+                command.Parameters.AddWithValue("@sdate", startDate);
+                command.Parameters.AddWithValue("@edate", endDate);
 
                 db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;

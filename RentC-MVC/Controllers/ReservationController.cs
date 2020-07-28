@@ -33,7 +33,8 @@ namespace RentC_MVC.Controllers
         [HttpPost]
         public ActionResult Create(Reservation reservation)
         {
-            Util.Response res = logic.reservation.register(reservation.carId, reservation.customerId, reservation.startDate, reservation.endDate, reservation.location);
+            Util.Response res = logic.reservation.register(reservation.carId, reservation.customerId, reservation.startDate, 
+                reservation.endDate, reservation.location);
             if (!ModelState.IsValid)
             {
                 return View(reservation);
@@ -69,9 +70,9 @@ namespace RentC_MVC.Controllers
         }
 
 
-        public ActionResult Edit(int carId, int customerId)
+        public ActionResult Edit(int carId, int customerId, DateTime startDate, DateTime endDate)
         {
-            Reservation reservation = logic.reservation.findById(carId, customerId);
+            Reservation reservation = logic.reservation.findById(carId, customerId, startDate, endDate);
             if (reservation == null)
                 return HttpNotFound();
             else
@@ -79,9 +80,9 @@ namespace RentC_MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Reservation reservation, int carId, int customerId)
+        public ActionResult Edit(Reservation reservation, int carId, int customerId, DateTime startDate, DateTime endDate)
         {
-            Reservation reservationToEdit = logic.reservation.findById(carId, customerId);
+            Reservation reservationToEdit = logic.reservation.findById(carId, customerId, startDate, endDate);
             Response res = logic.reservation.update(carId, customerId, reservation.startDate, reservation.endDate);
 
             if (reservationToEdit == null) {
@@ -95,9 +96,9 @@ namespace RentC_MVC.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult Delete(int carId, int customerId)
+        public ActionResult Delete(int carId, int customerId, DateTime startDate, DateTime endDate)
         {
-            Reservation reservation = logic.reservation.findById(carId, customerId);
+            Reservation reservation = logic.reservation.findById(carId, customerId, startDate, endDate);
             if (reservation == null)
                 return HttpNotFound();
             else
@@ -106,15 +107,15 @@ namespace RentC_MVC.Controllers
 
         [HttpPost]
         [ActionName("Delete")]
-        public ActionResult confirmDelete(int carId, int customerId)
+        public ActionResult confirmDelete(int carId, int customerId, DateTime startDate, DateTime endDate)
         {
-            Reservation reservationToDelete = logic.reservation.findById(carId, customerId);
+            Reservation reservationToDelete = logic.reservation.findById(carId, customerId, startDate, endDate);
 
             if (reservationToDelete == null)
                 return HttpNotFound();
             else
             {
-                logic.reservation.cancelReservation(carId, customerId);
+                logic.reservation.cancelReservation(carId, customerId, startDate, endDate);
                 return RedirectToAction("List");
             }
         }

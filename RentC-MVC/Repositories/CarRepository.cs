@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -131,13 +132,23 @@ namespace RentC_MVC.Repositories
                     return cars;
                 }
             }*/
-            webServicesSettings();
+            /*webServicesSettings();
             HttpResponseMessage message =
                 client.GetAsync("getAvailableCars?orderBy=" + orderBy + "&ascendent=" + ascendent).Result;
             string carsJson = message.Content.ReadAsStringAsync().Result;
+
+
             JArray obj = Newtonsoft.Json.JsonConvert.DeserializeObject<JArray>(carsJson);
 
-            return convertJsonToList(obj);
+            return convertJsonToList(obj);*/
+
+            localhost.WebService carService = new localhost.WebService();
+            var carsJson = carService.getAvailableCars(orderBy, ascendent);
+            //Debug.WriteLine(cars);
+            JArray carArray = JArray.Parse(carsJson);
+
+
+            return convertJsonToList(carArray);
         }
 
         public List<Car> convertJsonToList(JArray carsArray) {

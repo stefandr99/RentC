@@ -73,7 +73,7 @@ namespace RentC_MVC.BLL
         public Response update(int carId, int customerId, DateTime startDate, DateTime endDate) {
             /*if (!int.TryParse(carId, out int id))
                 return Response.INCORRECT_ID;*/
-            if (!reservationData.verifyReservation(carId, customerId, db))
+            if (!reservationData.verifyReservation(carId, customerId, startDate, endDate, db))
                 return Response.INEXISTENT_RESERVATION;
 
             /*string format = "dd/MM/yyyy";
@@ -99,18 +99,18 @@ namespace RentC_MVC.BLL
             return reservationData.list(orderBy, ascendent, db);
         }
 
-        public Reservation findById(int carId, int customerId)
+        public Reservation findById(int carId, int customerId, DateTime startDate, DateTime endDate)
         {
-            return reservationData.findById(carId, customerId, db);
+            return reservationData.findById(carId, customerId, startDate, endDate, db);
         }
 
-        public Response cancelReservation(int carId, int customerId) {
+        public Response cancelReservation(int carId, int customerId, DateTime startDate, DateTime endDate) {
             /*if (!int.TryParse(identifyId, out int id))
                 return Response.INCORRECT_ID;*/
 
-            if (!reservationData.verifyReservation(carId, customerId, db))
+            if (!reservationData.verifyReservation(carId, customerId, startDate, endDate, db))
                 return Response.INEXISTENT_RESERVATION;
-            if (!reservationData.remove(carId, customerId, db))
+            if (!reservationData.remove(carId, customerId, startDate, endDate, db))
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }
