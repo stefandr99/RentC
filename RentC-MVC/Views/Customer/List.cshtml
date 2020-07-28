@@ -5,13 +5,48 @@
 }
 
 <h2>Customers</h2>
+<div class="pull-left">
+    <p>
+        @Html.ActionLink("Register New", "Create")
+    </p>
+</div>
+<div class="pull-right">
+    <p>
+        @Html.ActionLink("Back to main page", "Index", "Home")
+    </p>
+</div>
+<div class="clearfix"></div>
 
-<p>
-    @Html.ActionLink("Register New", "Create")
-</p>
-<p>
-    @Html.ActionLink("Back to main page", "Index", "Home")
-</p>
+
+<br />
+
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="orderBy" class="col-sm-3 col-form-label">Order by </label>
+        <select id="orderBy" class="form-control form-control-sm">
+            <option>Id</option>
+            <option>Name</option>
+            <option>Birth Day</option>
+            <option>Location</option>
+            <option>ZIP Code</option>
+        </select>
+    </div>
+    <div class="form-group col-md-5">
+        <label for="inOrder" class="col-sm-4 col-form-label">In order </label>
+        <select class="form-control form-control-sm" id="inOrder">
+            <option>Ascendent</option>
+            <option>Descendent</option>
+        </select>
+    </div>
+    <div class="form-group col-md-1">
+        <button type="button" class="btn btn-primary mb-2" id="sort">Sort</button>
+    </div>
+</div>
+
+
+
+
+
 <table class="table">
     <tr>
         <th>
@@ -32,28 +67,81 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.customerId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.birthDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.location)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ZIPCode)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new {id = item.customerId}) |
-            @Html.ActionLink("Delete", "Delete", new {id = item.customerId})
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.customerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.birthDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ZIPCode)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.customerId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.customerId })
+            </td>
+        </tr>
+    }
 
 </table>
+
+@section scripts {
+    <script>
+        document.getElementById("sort").onclick = function () {
+            var e1 = document.getElementById("orderBy");
+            var criteria = e1.options[e1.selectedIndex].text;
+            var crit = 1;
+            switch (criteria) {
+                case "Id":{
+                    crit = 1;
+                    break;
+                }
+                case "Name":{
+                    crit = 2;
+                    break;
+                }
+                case "Birth Day":{
+                    crit = 3;
+                    break;
+                }
+                case "Location":{
+                    crit = 4;
+                    break;
+                }
+                case "ZIP Code":{
+                    crit = 5;
+                    break;
+                }
+                default:
+                    crit = 1;
+            }
+
+            var e2 = document.getElementById("inOrder");
+            var order = e2.options[e2.selectedIndex].text;
+
+            switch (order) {
+                case "Ascendent": {
+                    order = "ASC";
+                    break;
+                }
+                case "Descendent": {
+                    order = "DESC";
+                    break;
+                }
+                default:
+                    order = "ASC";
+            }
+
+            window.location.href = '@Url.Action("List", "Customer")' + '?orderBy=' + crit + '&ascendent=' + order;
+        };
+    </script>
+}

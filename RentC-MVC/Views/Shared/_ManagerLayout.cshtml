@@ -27,11 +27,11 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Customers", "List", "Customer")</li>
+                            <li>@Html.ActionLink("Customers", "List", "Customer", new { orderBy = 1, ascendent = "ASC" }, "")</li>
 
-                            <li>@Html.ActionLink("Cars", "List", "Car")</li>
+                            <li>@Html.ActionLink("Cars", "List", "Car", new { orderBy = 1, ascendent = "ASC" }, "")</li>
 
-                            <li>@Html.ActionLink("Reservations", "List", "Reservation")</li>
+                            <li>@Html.ActionLink("Reservations", "List", "Reservation", new { orderBy = 1, ascendent = "ASC" }, "")</li>
                         </ul>
                     </li>
 

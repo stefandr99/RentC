@@ -20,7 +20,11 @@
                 <b>Month</b>
             </div>
             <div class="col-md-10">
-                <input type="text" name="month" placeholder="Month" class="form-control" />
+                <input type="text" name="month" placeholder="Month" class="form-control" required maxlength="2" size="2"/>
+                <span class="field-validation-valid text-danger"
+                      data-valmsg-for="month"
+                      data-valmsg-replace="true">
+                </span>
             </div>
         </div>
 
@@ -29,7 +33,11 @@
                 <b>Year</b> 
             </div>
             <div class="col-md-10">
-                <input type="text" name="year" placeholder="Year" class="form-control"/>
+                <input type="text" name="year" placeholder="Year" class="form-control" required maxlength="4" size="2"/>
+                <span class="field-validation-valid text-danger"
+                      data-valmsg-for="year"
+                      data-valmsg-replace="true">
+                </span>
             </div>
         </div>
 

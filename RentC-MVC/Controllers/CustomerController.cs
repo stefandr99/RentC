@@ -18,8 +18,10 @@ namespace RentC_MVC.Controllers
             logic = new Logic();
         }
 
-        public ActionResult List() {
-            List<Customer> customers = logic.customer.list(1, "ASC");
+        [HttpGet]
+        public ActionResult List(int orderBy, string ascendent) {
+            
+            List<Customer> customers = logic.customer.list(orderBy, ascendent);
             return View(customers);
         }
 

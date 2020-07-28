@@ -6,14 +6,49 @@
 
 <h2>Users</h2>
 
-<p>
-    @Html.ActionLink("Hire salesperson", "Create")
-</p>
-<p>
-    @Html.ActionLink("Back to main page", "Index", "Home")
-</p>
+<div class="pull-left">
+    <p>
+        @Html.ActionLink("Hire salesperson", "Create")
+    </p>
+</div>
+<div class="pull-right">
+    <p>
+        @Html.ActionLink("Back to main page", "Index", "Home")
+    </p>
+</div>
+<div class="clearfix"></div>
+
+
+<br />
+
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="orderBy" class="col-sm-3 col-form-label">Order by </label>
+        <select id="orderBy" class="form-control form-control-sm">
+            <option>Id</option>
+            <option>Username</option>
+            <option>Password</option>
+            <option>Role Id</option>
+            <option>Enabled</option>
+        </select>
+    </div>
+    <div class="form-group col-md-5">
+        <label for="inOrder" class="col-sm-4 col-form-label">In order </label>
+        <select class="form-control form-control-sm" id="inOrder">
+            <option>Ascendent</option>
+            <option>Descendent</option>
+        </select>
+    </div>
+    <div class="form-group col-md-1">
+        <button type="button" class="btn btn-primary mb-2" id="sort">Sort</button>
+    </div>
+</div>
+
 <table class="table">
     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.userId)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.username)
         </th>
@@ -33,6 +68,9 @@
     {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.userId)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.username)
             </td>
             <td>
@@ -42,7 +80,7 @@
                 @Html.DisplayFor(modelItem => item.roleId)
             </td>
             <td>
-                @Html.CheckBoxFor(modelItem => item.enabled, new {id = item.userId, @class = "toggle", data_url = Url.Action("UserActivity", "User")})
+                @Html.CheckBoxFor(modelItem => item.enabled, new { id = item.userId, @class = "toggle", data_url = Url.Action("UserActivity", "User") })
             </td>
         </tr>
     }
@@ -50,8 +88,8 @@
 </table>
 @section scripts {
     <script>
-        $(function() {
-            $('.toggle').change(function() {
+        $(function () {
+            $('.toggle').change(function () {
                 var self = $(this);
                 var url = self.data('url');
                 var id = self.attr('id');
@@ -61,11 +99,62 @@
                     url: url,
                     data: { id: id, decision: value },
                     type: 'POST',
-                    success: function(response) {
+                    success: function (response) {
                         alert(value ? "User enabled" : "User disabled");
                     }
                 });
             });
         });
     </script>
+
+    <script>
+        document.getElementById("sort").onclick = function () {
+            var e1 = document.getElementById("orderBy");
+            var criteria = e1.options[e1.selectedIndex].text;
+            var crit = 1;
+            switch (criteria) {
+            case "Id":{
+                crit = 1;
+                break;
+            }
+            case "Username":{
+                crit = 2;
+                break;
+            }
+            case "Password":{
+                crit = 3;
+                break;
+            }
+            case "Role Id":{
+                crit = 4;
+                break;
+            }
+            case "Enabled":{
+                crit = 5;
+                break;
+            }
+            default:
+                crit = 1;
+            }
+
+            var e2 = document.getElementById("inOrder");
+            var order = e2.options[e2.selectedIndex].text;
+
+            switch (order) {
+            case "Ascendent": {
+                order = "ASC";
+                break;
+            }
+            case "Descendent": {
+                order = "DESC";
+                break;
+            }
+            default:
+                order = "ASC";
+            }
+
+            window.location.href = '@Url.Action("List", "User")' + '?orderBy=' + crit + '&ascendent=' + order;
+        };
+    </script>
+
 }

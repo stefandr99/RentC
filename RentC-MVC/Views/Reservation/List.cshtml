@@ -6,12 +6,46 @@
 
 <h2>Reservations</h2>
 
-<p>
-    @Html.ActionLink("Register New", "Create")
-</p>
-<p>
-    @Html.ActionLink("Back to main page", "Index", "Home")
-</p>
+<div class="pull-left">
+    <p>
+        @Html.ActionLink("Register New", "Create")
+    </p>
+</div>
+<div class="pull-right">
+    <p>
+        @Html.ActionLink("Back to main page", "Index", "Home")
+    </p>
+</div>
+<div class="clearfix"></div>
+
+
+<br />
+
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="orderBy" class="col-sm-3 col-form-label">Order by </label>
+        <select id="orderBy" class="form-control form-control-sm">
+            <option>Car Id</option>
+            <option>Customer Id</option>
+            <option>Reservations Stats Id</option>
+            <option>Start Date</option>
+            <option>End Date</option>
+            <option>Start Date</option>
+            <option>Coupon Code</option>
+        </select>
+    </div>
+    <div class="form-group col-md-5">
+        <label for="inOrder" class="col-sm-4 col-form-label">In order </label>
+        <select class="form-control form-control-sm" id="inOrder">
+            <option>Ascendent</option>
+            <option>Descendent</option>
+        </select>
+    </div>
+    <div class="form-group col-md-1">
+        <button type="button" class="btn btn-primary mb-2" id="sort">Sort</button>
+    </div>
+</div>
+
 <table class="table">
     <tr>
         <th>
@@ -38,34 +72,96 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.carId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.customerId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.reservStatsId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.startDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.endDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.location)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.couponCode)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new {  CarId=item.carId, CustomerId=item.customerId, StartDate=item.startDate, EndDate=item.endDate  }) |
-            @Html.ActionLink("Delete", "Delete", new { CarId = item.carId, CustomerId = item.customerId, StartDate = item.startDate, EndDate = item.endDate })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.carId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.reservStatsId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.startDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.endDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.couponCode)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { CarId = item.carId, CustomerId = item.customerId, StartDate = item.startDate, EndDate = item.endDate }) |
+                @Html.ActionLink("Delete", "Delete", new { CarId = item.carId, CustomerId = item.customerId, StartDate = item.startDate, EndDate = item.endDate })
+            </td>
+        </tr>
+    }
 
 </table>
+
+
+@section scripts {
+    <script>
+        document.getElementById("sort").onclick = function () {
+            var e1 = document.getElementById("orderBy");
+            var criteria = e1.options[e1.selectedIndex].text;
+            var crit = 1;
+            switch (criteria) {
+                case "Car Id":{
+                    crit = 1;
+                    break;
+                }
+                case "Customer Id":{
+                    crit = 2;
+                    break;
+                }
+                case "Reservations Stats Id":{
+                    crit = 3;
+                    break;
+                }
+                case "Start Date":{
+                    crit = 4;
+                    break;
+                }
+                case "End Date":{
+                    crit = 5;
+                    break;
+                }
+                case "Location":{
+                    crit = 6;
+                    break;
+                }
+                case "Coupon Code":{
+                    crit = 7;
+                    break;
+                }
+            default:
+                crit = 1;
+            }
+
+            var e2 = document.getElementById("inOrder");
+            var order = e2.options[e2.selectedIndex].text;
+
+            switch (order) {
+            case "Ascendent": {
+                order = "ASC";
+                break;
+            }
+            case "Descendent": {
+                order = "DESC";
+                break;
+            }
+            default:
+                order = "ASC";
+            }
+
+            window.location.href = '@Url.Action("List", "Reservation")' + '?orderBy=' + crit + '&ascendent=' + order;
+        };
+    </script>
+}

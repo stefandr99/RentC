@@ -19,9 +19,10 @@ namespace RentC_MVC.Controllers
             logic = new Logic();
         }
 
-        public ActionResult List()
+        [HttpGet]
+        public ActionResult List(int orderBy, string ascendent)
         {
-            List<Car> cars = logic.car.listAvailable(1, "ASC");
+            List<Car> cars = logic.car.listAvailable(orderBy, ascendent);
             return View(cars);
         }
 
@@ -138,7 +139,7 @@ namespace RentC_MVC.Controllers
         [HttpPost]
         public ActionResult ListMostRentedByMonth2(int month, int year)
         {
-            Regex r1 = new Regex("^(0[1-9]|1[0-2]){2}$");
+            Regex r1 = new Regex("^(0[1-9]|1[0-2]){1}$");
             if (!r1.IsMatch(month.ToString())) {
                 ModelState.AddModelError("month", "Invalid month.");
                 return View();
@@ -163,7 +164,7 @@ namespace RentC_MVC.Controllers
         [HttpPost]
         public ActionResult ListLessRentedByMonth2(int month, int year)
         {
-            Regex r1 = new Regex("^(0[1-9]|1[0-2]){2}$");
+            Regex r1 = new Regex("^(0[1-9]|1[0-2]){1}$");
             if (!r1.IsMatch(month.ToString()))
             {
                 ModelState.AddModelError("month", "Invalid month.");

@@ -4,16 +4,53 @@
     ViewBag.Title = "Available Cars";
 }
 
-    <h2>Available Cars</h2>
+<h2>Available Cars</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<p>
-    @Html.ActionLink("Back to main page", "Index", "Home")
-</p>
+<div class="pull-left">
+    <p>
+        @Html.ActionLink("Register New", "Create")
+    </p>
+</div>
+<div class="pull-right">
+    <p>
+        @Html.ActionLink("Back to main page", "Index", "Home")
+    </p>
+</div>
+<div class="clearfix"></div>
+
+
+<br />
+
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="orderBy" class="col-sm-3 col-form-label">Order by </label>
+        <select id="orderBy" class="form-control form-control-sm">
+            <option>Id</option>
+            <option>Plate </option>
+            <option>Manufacturer</option>
+            <option>Model</option>
+            <option>Price Per Day</option>
+            <option>City</option>
+        </select>
+    </div>
+    <div class="form-group col-md-5">
+        <label for="inOrder" class="col-sm-4 col-form-label">In order </label>
+        <select class="form-control form-control-sm" id="inOrder">
+            <option>Ascendent</option>
+            <option>Descendent</option>
+        </select>
+    </div>
+    <div class="form-group col-md-1">
+        <button type="button" class="btn btn-primary mb-2" id="sort">Sort</button>
+    </div>
+</div>
+
+
 <table class="table">
     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.carId)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.plate)
         </th>
@@ -32,28 +69,89 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.plate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.manufacturer)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.model)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.pricePerDay)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.city)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.carId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.carId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.carId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.plate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.manufacturer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.pricePerDay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.city)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {id = item.carId}) |
+                @Html.ActionLink("Delete", "Delete", new {id = item.carId})
+            </td>
+        </tr>
+    }
 
 </table>
+
+
+@section scripts {
+    <script>
+        document.getElementById("sort").onclick = function () {
+            var e1 = document.getElementById("orderBy");
+            var criteria = e1.options[e1.selectedIndex].text;
+            var crit = 1;
+            switch (criteria) {
+            case "Id":{
+                crit = 1;
+                break;
+            }
+            case "Plate":{
+                crit = 2;
+                break;
+            }
+            case "Manufacturer":{
+                crit = 3;
+                break;
+            }
+            case "Model":{
+                crit = 4;
+                break;
+            }
+            case "Price Per Day":{
+                crit = 5;
+                break;
+            }
+            case "City":{
+                crit = 6;
+                break;
+            }
+            default:
+                crit = 1;
+            }
+
+            var e2 = document.getElementById("inOrder");
+            var order = e2.options[e2.selectedIndex].text;
+
+            switch (order) {
+            case "Ascendent": {
+                order = "ASC";
+                break;
+            }
+            case "Descendent": {
+                order = "DESC";
+                break;
+            }
+            default:
+                order = "ASC";
+            }
+
+            window.location.href = '@Url.Action("List", "Car")' + '?orderBy=' + crit + '&ascendent=' + order;
+        };
+    </script>
+}

@@ -18,9 +18,10 @@ namespace RentC_MVC.Controllers
             logic = new Logic();
         }
 
-        public ActionResult List()
+        [HttpGet]
+        public ActionResult List(int orderBy, string ascendent)
         {
-            List<Reservation> reservations = logic.reservation.list(1, "ASC");
+            List<Reservation> reservations = logic.reservation.list(orderBy, ascendent);
             return View(reservations);
         }
 
