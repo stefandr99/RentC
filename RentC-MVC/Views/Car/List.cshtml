@@ -45,6 +45,26 @@
     </div>
 </div>
 
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="searchBar" class="col-sm-3 col-form-label">Search</label>
+        <input type="text" class="form-control" id="searchBar" />
+    </div>
+    <div class="form-group col-md-5">
+        <label class="col-sm-4">By</label>
+        <input type="radio" name="inlineRadioOptions" id="r1" value="CarID">
+        <label for="r1">Id</label>
+        <input type="radio" name="inlineRadioOptions" id="r2" value="Plate" checked>
+        <label for="r2">Plate</label>
+        <input type="radio" name="inlineRadioOptions" id="r3" value="Manufacturer">
+        <label for="r3">Manufacturer</label>
+        <input type="radio" name="inlineRadioOptions" id="r4" value="City">
+        <label for="r4">City</label>
+    </div>
+    <div class="form-group col-md-1">
+        <button type="button" class="btn btn-primary" id="searchButton">Search</button>
+    </div>
+</div>
 
 <table class="table">
     <tr>
@@ -69,32 +89,41 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @if (Model.Count() == 0)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.carId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.plate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.manufacturer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.pricePerDay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.city)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new {id = item.carId}) |
-                @Html.ActionLink("Delete", "Delete", new {id = item.carId})
-            </td>
+            <td><p><b>No data match search criteria</b></p></td>
         </tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.carId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.plate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.manufacturer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.model)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.pricePerDay)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.city)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.carId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.carId })
+                </td>
+            </tr>
+        }
     }
 
 </table>
@@ -152,6 +181,18 @@
             }
 
             window.location.href = '@Url.Action("List", "Car")' + '?orderBy=' + crit + '&ascendent=' + order;
+        };
+    </script>
+
+    <script>
+        document.getElementById("searchButton").onclick = function () {
+
+            var searchText = document.getElementById("searchBar").value;
+            var criteria = document.getElementById('r1').checked ? document.getElementById('r1').value :
+                (document.getElementById('r2').checked ? document.getElementById('r2').value : document.getElementById('r3').value);
+
+
+            window.location.href = '@Url.Action("Search", "Car")' + '?criteria=' + criteria + '&search=' + searchText;
         };
     </script>
 }

@@ -14,5 +14,6 @@ namespace RentC_MVC.Repositories
         List<T> list(int orderBy, string ascendent, DbConnection db);
         bool update(T obj, DbConnection db);
         T findById(int id, DbConnection db);
+        List<T> search(string criteria, string search, DbConnection db);
     }
 }

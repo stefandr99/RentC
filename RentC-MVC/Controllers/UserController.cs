@@ -25,6 +25,13 @@ namespace RentC_MVC.Controllers
             return View(users);
         }
 
+        [HttpGet]
+        public ActionResult Search(string criteria, string search)
+        {
+            List<User> users = logic.user.search(criteria, search);
+            return View("List", users);
+        }
+
         public ActionResult Create()
         {
             User user = new User();

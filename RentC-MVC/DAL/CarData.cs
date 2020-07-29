@@ -44,6 +44,10 @@ namespace RentC_MVC.DAL
             return carRepository.list(orderBy, ascendent, db);
         }
 
+        public List<Car> search(string criteria, string search, DbConnection db) {
+            return carRepository.search(criteria, search, db);
+        }
+
         public Car findById(int id, DbConnection db) {
             return carRepository.findById(id, db);
         }

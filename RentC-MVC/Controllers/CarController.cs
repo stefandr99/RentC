@@ -26,6 +26,13 @@ namespace RentC_MVC.Controllers
             return View(cars);
         }
 
+        [HttpGet]
+        public ActionResult Search(string criteria, string search)
+        {
+            List<Car> cars = logic.car.search(criteria, search);
+            return View("List", cars);
+        }
+
         public ActionResult Create()
         {
             Car car = new Car();

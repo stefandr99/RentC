@@ -69,6 +69,11 @@ namespace RentC_MVC.BLL
             return carData.list(orderBy, ascendent, db);
         }
 
+        public List<Car> search(string criteria, string search)
+        {
+            return carData.search(criteria, search, db);
+        }
+
         public Response update(int id, string plate, string manufacturer, string model, decimal pricePerDay, string city) {
             var r = new Regex("^[A-Z]{2}\\s\\d{2}\\s[A-Z]{3}$");
             var cityRe = new Regex("^[a-zA-Z]+$");

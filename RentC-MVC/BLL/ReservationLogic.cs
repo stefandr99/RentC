@@ -99,6 +99,11 @@ namespace RentC_MVC.BLL
             return reservationData.list(orderBy, ascendent, db);
         }
 
+        public List<Reservation> search(string criteria, string search)
+        {
+            return reservationData.search(criteria, search, db);
+        }
+
         public Reservation findById(int carId, int customerId, DateTime startDate, DateTime endDate)
         {
             return reservationData.findById(carId, customerId, startDate, endDate, db);

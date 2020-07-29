@@ -97,5 +97,39 @@ namespace RentC_MVC.Repositories
                 return null;
             }
         }
+
+        public List<User> search(string criteria, string search, DbConnection db)
+        {
+            string query;
+            if (criteria.Equals("UserID") || criteria.Equals("RoleID"))
+            {
+                query = "SELECT * FROM Customers WHERE " + criteria + " = " + search + "";
+            }
+            else
+            {
+                query = "SELECT * FROM Customers WHERE " + criteria + " LIKE '%" + search + "%'";
+            }
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    List<User> users = new List<User>();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            User user = new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
+                                reader.GetBoolean(3), reader.GetInt32(4));
+                            users.Add(user);
+                        }
+                    }
+
+                    db.getDbConnection().Close();
+                    return users;
+                }
+            }
+        }
     }
 }

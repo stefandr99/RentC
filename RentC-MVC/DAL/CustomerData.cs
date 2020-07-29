@@ -29,6 +29,10 @@ namespace RentC_MVC.DAL
             return customerRepository.list(orderBy, ascendent, db);
         }
 
+        public List<Customer> search(string criteria, string search, DbConnection db) {
+            return customerRepository.search(criteria, search, db);
+        }
+
         public Customer findById(int id, DbConnection db) {
             return customerRepository.findById(id, db);
         }

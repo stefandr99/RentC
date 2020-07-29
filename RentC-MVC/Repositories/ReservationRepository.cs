@@ -119,6 +119,38 @@ namespace RentC_MVC.Repositories
             }
         }
 
-        
+        public List<Reservation> search(string criteria, string search, DbConnection db)
+        {
+            string query;
+            if (criteria.Equals("CustomerID") || criteria.Equals("CarID"))
+            {
+                query = "SELECT * FROM Customers WHERE " + criteria + " = " + search + "";
+            }
+            else
+            {
+                query = "SELECT * FROM Customers WHERE " + criteria + " LIKE '%" + search + "%'";
+            }
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    List<Reservation> reservations = new List<Reservation>();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1),
+                                reader.GetDateTime(3), reader.GetDateTime(4), reader.GetString(5));
+                            reservations.Add(reservation);
+                        }
+                    }
+
+                    db.getDbConnection().Close();
+                    return reservations;
+                }
+            }
+        }
     }
 }

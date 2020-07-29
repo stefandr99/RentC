@@ -122,6 +122,10 @@ namespace RentC_MVC.DAL
             return userRepository.list(orderBy, ascendent, db);
         }
 
+        public List<User> search(string criteria, string search, DbConnection db) {
+            return userRepository.search(criteria, search, db);
+        }
+
         public User findById(int id, DbConnection db)
         {
             return userRepository.findById(id, db);

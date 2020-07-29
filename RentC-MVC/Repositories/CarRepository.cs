@@ -184,5 +184,39 @@ namespace RentC_MVC.Repositories
                 return null;
             }
         }
+
+        public List<Car> search(string criteria, string search, DbConnection db)
+        {
+            string query;
+            if (criteria.Equals("CarID"))
+            {
+                query = "SELECT * FROM Cars WHERE " + criteria + " = " + search + "";
+            }
+            else
+            {
+                query = "SELECT * FROM Cars WHERE " + criteria + " LIKE '%" + search + "%'";
+            }
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    List<Car> cars = new List<Car>();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Car car = new Car(reader.GetInt32(0), reader.GetString(1), reader.GetString(2),
+                                reader.GetString(3), reader.GetDecimal(4), reader.GetString(5));
+                            cars.Add(car);
+                        }
+                    }
+
+                    db.getDbConnection().Close();
+                    return cars;
+                }
+            }
+        }
     }
 }

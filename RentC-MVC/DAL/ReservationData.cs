@@ -81,7 +81,10 @@ namespace RentC_MVC.DAL
             return reservationRepository.list(orderBy, ascendent, db);
         }
 
-        
+        public List<Reservation> search(string criteria, string search, DbConnection db) {
+            return reservationRepository.search(criteria, search, db);
+        }
+
         public bool remove(int id,  DbConnection db) {
             return reservationRepository.remove(id, db);
         }

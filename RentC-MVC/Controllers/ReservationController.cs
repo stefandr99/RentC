@@ -25,6 +25,13 @@ namespace RentC_MVC.Controllers
             return View(reservations);
         }
 
+        [HttpGet]
+        public ActionResult Search(string criteria, string search)
+        {
+            List<Reservation> reservations = logic.reservation.search(criteria, search);
+            return View("List", reservations);
+        }
+
         public ActionResult Create()
         {
             Reservation reservation = new Reservation();

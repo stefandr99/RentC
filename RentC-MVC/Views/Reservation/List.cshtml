@@ -46,6 +46,25 @@
     </div>
 </div>
 
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="searchBar" class="col-sm-3 col-form-label">Search</label>
+        <input type="text" class="form-control" id="searchBar" />
+    </div>
+    <div class="form-group col-md-5">
+        <label class="col-sm-4">By</label>
+        <input type="radio" name="inlineRadioOptions" id="r1" value="CarID" checked>
+        <label for="r1">Car Id</label>
+        <input type="radio" name="inlineRadioOptions" id="r2" value="CustomerID">
+        <label for="r2">Customer Id</label>
+        <input type="radio" name="inlineRadioOptions" id="r3" value="Location">
+        <label for="r3">Location</label>
+    </div>
+    <div class="form-group col-md-1">
+        <button type="button" class="btn btn-primary" id="searchButton">Search</button>
+    </div>
+</div>
+
 <table class="table">
     <tr>
         <th>
@@ -72,35 +91,44 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @if (Model.Count() == 0)
     {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.carId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.customerId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.reservStatsId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.startDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.endDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.couponCode)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { CarId = item.carId, CustomerId = item.customerId, StartDate = item.startDate, EndDate = item.endDate }) |
-                @Html.ActionLink("Delete", "Delete", new { CarId = item.carId, CustomerId = item.customerId, StartDate = item.startDate, EndDate = item.endDate })
-            </td>
+            <td><p><b>No data match search criteria</b></p></td>
         </tr>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.carId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.customerId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.reservStatsId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.startDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.endDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.couponCode)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { CarId = item.carId, CustomerId = item.customerId, StartDate = item.startDate, EndDate = item.endDate }) |
+                    @Html.ActionLink("Delete", "Delete", new { CarId = item.carId, CustomerId = item.customerId, StartDate = item.startDate, EndDate = item.endDate })
+                </td>
+            </tr>
+        }
     }
 
 </table>
@@ -113,34 +141,34 @@
             var criteria = e1.options[e1.selectedIndex].text;
             var crit = 1;
             switch (criteria) {
-                case "Car Id":{
-                    crit = 1;
-                    break;
-                }
-                case "Customer Id":{
-                    crit = 2;
-                    break;
-                }
-                case "Reservations Stats Id":{
-                    crit = 3;
-                    break;
-                }
-                case "Start Date":{
-                    crit = 4;
-                    break;
-                }
-                case "End Date":{
-                    crit = 5;
-                    break;
-                }
-                case "Location":{
-                    crit = 6;
-                    break;
-                }
-                case "Coupon Code":{
-                    crit = 7;
-                    break;
-                }
+            case "Car Id":{
+                crit = 1;
+                break;
+            }
+            case "Customer Id":{
+                crit = 2;
+                break;
+            }
+            case "Reservations Stats Id":{
+                crit = 3;
+                break;
+            }
+            case "Start Date":{
+                crit = 4;
+                break;
+            }
+            case "End Date":{
+                crit = 5;
+                break;
+            }
+            case "Location":{
+                crit = 6;
+                break;
+            }
+            case "Coupon Code":{
+                crit = 7;
+                break;
+            }
             default:
                 crit = 1;
             }
@@ -162,6 +190,18 @@
             }
 
             window.location.href = '@Url.Action("List", "Reservation")' + '?orderBy=' + crit + '&ascendent=' + order;
+        };
+    </script>
+
+    <script>
+        document.getElementById("searchButton").onclick = function () {
+
+            var searchText = document.getElementById("searchBar").value;
+            var criteria = document.getElementById('r1').checked ? document.getElementById('r1').value :
+                (document.getElementById('r2').checked ? document.getElementById('r2').value : document.getElementById('r3').value);
+
+
+            window.location.href = '@Url.Action("Search", "Reservation")' + '?criteria=' + criteria + '&search=' + searchText;
         };
     </script>
 }

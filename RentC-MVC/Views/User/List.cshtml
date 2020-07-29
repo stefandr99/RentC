@@ -44,6 +44,25 @@
     </div>
 </div>
 
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="searchBar" class="col-sm-3 col-form-label">Search</label>
+        <input type="text" class="form-control" id="searchBar" />
+    </div>
+    <div class="form-group col-md-5">
+        <label class="col-sm-4">By</label>
+        <input type="radio" name="inlineRadioOptions" id="r1" value="UserID">
+        <label for="r1">Id</label>
+        <input type="radio" name="inlineRadioOptions" id="r2" value="Username" checked>
+        <label for="r2">Username</label>
+        <input type="radio" name="inlineRadioOptions" id="r3" value="RoleID">
+        <label for="r3">Role</label>
+    </div>
+    <div class="form-group col-md-1">
+        <button type="button" class="btn btn-primary" id="searchButton">Search</button>
+    </div>
+</div>
+
 <table class="table">
     <tr>
         <th>
@@ -63,26 +82,32 @@
         </th>
         <th></th>
     </tr>
-
-    @foreach (var item in Model)
-    {
+    
+    @if (Model.Count() == 0) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.userId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.password)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.roleId)
-            </td>
-            <td>
-                @Html.CheckBoxFor(modelItem => item.enabled, new { id = item.userId, @class = "toggle", data_url = Url.Action("UserActivity", "User") })
-            </td>
+            <td><p><b>No data match search criteria</b></p></td>
         </tr>
+    }
+    else {
+        foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.userId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.roleId)
+                </td>
+                <td>
+                    @Html.CheckBoxFor(modelItem => item.enabled, new {id = item.userId, @class = "toggle", data_url = Url.Action("UserActivity", "User")})
+                </td>
+            </tr>
+        }
     }
 
 </table>
@@ -154,6 +179,18 @@
             }
 
             window.location.href = '@Url.Action("List", "User")' + '?orderBy=' + crit + '&ascendent=' + order;
+        };
+    </script>
+
+    <script>
+        document.getElementById("searchButton").onclick = function () {
+
+            var searchText = document.getElementById("searchBar").value;
+            var criteria = document.getElementById('r1').checked ? document.getElementById('r1').value :
+                (document.getElementById('r2').checked ? document.getElementById('r2').value : document.getElementById('r3').value);
+
+
+            window.location.href = '@Url.Action("Search", "User")' + '?criteria=' + criteria + '&search=' + searchText;
         };
     </script>
 

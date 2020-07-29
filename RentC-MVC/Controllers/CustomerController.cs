@@ -25,6 +25,13 @@ namespace RentC_MVC.Controllers
             return View(customers);
         }
 
+        [HttpGet]
+        public ActionResult Search(string criteria, string search)
+        {
+            List<Customer> customers = logic.customer.search(criteria, search);
+            return View("List", customers);
+        }
+
         public ActionResult Create() {
             Customer customer = new Customer();
             return View(customer);

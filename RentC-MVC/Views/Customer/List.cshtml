@@ -43,9 +43,24 @@
     </div>
 </div>
 
-
-
-
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="searchBar" class="col-sm-3 col-form-label">Search</label>
+        <input type="text" class="form-control" id="searchBar" />
+    </div>
+    <div class="form-group col-md-5">
+        <label class="col-sm-4">By</label>
+        <input type="radio" name="inlineRadioOptions" id="r1" value="CustomerID">
+        <label for="r1">Id</label>
+        <input type="radio" name="inlineRadioOptions" id="r2" value="Name" checked>
+        <label for="r2">Name</label>
+        <input type="radio" name="inlineRadioOptions" id="r3" value="Location">
+        <label for="r3">Location</label>
+    </div>
+    <div class="form-group col-md-1">
+        <button type="button" class="btn btn-primary" id="searchButton">Search</button>
+    </div>
+</div>
 
 <table class="table">
     <tr>
@@ -66,30 +81,36 @@
         </th>
         <th></th>
     </tr>
-
-    @foreach (var item in Model)
-    {
+    
+    @if (Model.Count() == 0) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.customerId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.birthDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ZIPCode)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.customerId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.customerId })
-            </td>
+            <td><p><b>No data match search criteria</b></p></td>
         </tr>
+    }
+    else {
+        foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.customerId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.birthDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZIPCode)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new {id = item.customerId}) |
+                    @Html.ActionLink("Delete", "Delete", new {id = item.customerId})
+                </td>
+            </tr>
+        }
     }
 
 </table>
@@ -101,47 +122,59 @@
             var criteria = e1.options[e1.selectedIndex].text;
             var crit = 1;
             switch (criteria) {
-                case "Id":{
-                    crit = 1;
-                    break;
-                }
-                case "Name":{
-                    crit = 2;
-                    break;
-                }
-                case "Birth Day":{
-                    crit = 3;
-                    break;
-                }
-                case "Location":{
-                    crit = 4;
-                    break;
-                }
-                case "ZIP Code":{
-                    crit = 5;
-                    break;
-                }
-                default:
-                    crit = 1;
+            case "Id":{
+                crit = 1;
+                break;
+            }
+            case "Name":{
+                crit = 2;
+                break;
+            }
+            case "Birth Day":{
+                crit = 3;
+                break;
+            }
+            case "Location":{
+                crit = 4;
+                break;
+            }
+            case "ZIP Code":{
+                crit = 5;
+                break;
+            }
+            default:
+                crit = 1;
             }
 
             var e2 = document.getElementById("inOrder");
             var order = e2.options[e2.selectedIndex].text;
 
             switch (order) {
-                case "Ascendent": {
-                    order = "ASC";
-                    break;
-                }
-                case "Descendent": {
-                    order = "DESC";
-                    break;
-                }
-                default:
-                    order = "ASC";
+            case "Ascendent": {
+                order = "ASC";
+                break;
+            }
+            case "Descendent": {
+                order = "DESC";
+                break;
+            }
+            default:
+                order = "ASC";
             }
 
             window.location.href = '@Url.Action("List", "Customer")' + '?orderBy=' + crit + '&ascendent=' + order;
+        };
+    </script>
+    
+    <script>
+        document.getElementById("searchButton").onclick = function () {
+
+            var searchText = document.getElementById("searchBar").value;
+            var criteria = document.getElementById('r1').checked ? document.getElementById('r1').value :
+                (document.getElementById('r2').checked ? document.getElementById('r2').value : document.getElementById('r3').value);
+            
+
+            window.location.href = '@Url.Action("Search", "Customer")' + '?criteria=' + criteria + '&search=' + searchText;
         };
     </script>
 }

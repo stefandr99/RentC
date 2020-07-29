@@ -87,6 +87,11 @@ namespace RentC_MVC.BLL
             return customerData.list(orderBy, ascendent, db);
         }
 
+        public List<Customer> search(string criteria, string search)
+        {
+            return customerData.search(criteria, search, db);
+        }
+
         public Customer findById(int id)
         {
             return customerData.findById(id, db);

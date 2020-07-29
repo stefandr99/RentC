@@ -80,6 +80,41 @@ namespace RentC_MVC.Repositories
             }
         }
 
+        public List<Customer> search(string criteria, string search, DbConnection db)
+        {
+            string query;
+            if (criteria.Equals("CustomerID"))
+            {
+                query = "SELECT * FROM Customers WHERE " + criteria + " = " + search + "";
+            }
+            else
+            {
+                query = "SELECT * FROM Customers WHERE " + criteria + " LIKE '%" + search + "%'";
+            }
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    List<Customer> customers = new List<Customer>();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Customer customer = new Customer(reader.GetInt32(0), reader.GetString(1),
+                                reader.GetDateTime(2), reader.IsDBNull(3) ? "" : reader.GetString(3),
+                                reader.IsDBNull(4) ? "" : reader.GetString(4));
+                            customers.Add(customer);
+                        }
+                    }
+
+                    db.getDbConnection().Close();
+                    return customers;
+                }
+            }
+        }
+
         /**
          * 1 = Success!
          * 2 = You don't have the permission to do this.

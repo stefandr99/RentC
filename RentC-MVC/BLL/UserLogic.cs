@@ -95,6 +95,11 @@ namespace RentC_MVC.BLL
             return userData.list(orderBy, asc, db);
         }
 
+        public List<User> search(string criteria, string search)
+        {
+            return userData.search(criteria, search, db);
+        }
+
         public User findById(int id)
         {
             return userData.findById(id, db);
