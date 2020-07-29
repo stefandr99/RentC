@@ -23,7 +23,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.startDate, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.startDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.startDate, new { htmlAttributes = new { @class = "form-control", id="sdate" } })
             @Html.ValidationMessageFor(model => model.startDate, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -31,7 +31,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.endDate, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.endDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.endDate, new { htmlAttributes = new { @class = "form-control", id="edate" } })
             @Html.ValidationMessageFor(model => model.endDate, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -51,4 +51,28 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    
+    <script type="text/javascript">
+        $('#edate').change(function() {
+            var sDate = $('#sdate').val();
+            var eDate = $('#edate').val();
+
+            if (Date.parse(sDate) > Date.parse(eDate)) {
+                $("#edate").parent().after("<div class='col-md-offset-2 col-md-10' id='errorEndDate'><div class='text-danger'>End date cannot be earlier than start date.</div></div>");
+            }
+            if (!(Date.parse(sDate) > Date.parse(eDate))) {
+                document.getElementById("errorEndDate").style.display = "none";
+            }
+        });
+        $('#sdate').change(function() {
+            var sDate = $('#sdate').val();
+
+            if (Date.parse(sDate) < Date.now()) {
+                $("#sdate").parent().after("<div class='col-md-offset-2 col-md-10' id='errorStartDate'><div class='text-danger'>Reservation cannot start in past.</div></div>");
+            }
+            if (Date.parse(sDate) >= Date.now()) {
+                document.getElementById("errorStartDate").style.display = "none";
+            }
+        });
+    </script>
 }
