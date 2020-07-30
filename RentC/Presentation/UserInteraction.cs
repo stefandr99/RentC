@@ -43,6 +43,7 @@ namespace RentC.Presentation
                     System.Environment.Exit(0);
             }
 
+            logic.reservation.expiredReservations();
             authUser();
         }
 

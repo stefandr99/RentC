@@ -26,7 +26,6 @@ namespace RentC_MVC.BLL
         public Response register(string plate, string manufacturer, string model, decimal pricePerDay, string city)
         {
             
-
             /*if (!decimal.TryParse(pricePerDay, out decimal price))
                 return Response.INCORRECT_PRICE;*/
             var r = new Regex("^[A-Z]{2}\\s\\d{2}\\s[A-Z]{3}$");
@@ -76,7 +75,7 @@ namespace RentC_MVC.BLL
 
         public Response update(int id, string plate, string manufacturer, string model, decimal pricePerDay, string city) {
             var r = new Regex("^[A-Z]{2}\\s\\d{2}\\s[A-Z]{3}$");
-            var cityRe = new Regex("^[a-zA-Z]+$");
+            var cityRe = new Regex("^[A-Za-z]+$");
 
             if (!r.IsMatch(plate))
             {
