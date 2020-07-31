@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -65,7 +66,7 @@ namespace RentC_MVC.Controllers
             }
             else
             {
-                return RedirectToAction("List");
+                return RedirectToAction("List", new { orderBy = 1, ascendent = "ASC" });
             }
         }
 
@@ -105,7 +106,7 @@ namespace RentC_MVC.Controllers
                 return View(carToEdit);
             }
 
-            return RedirectToAction("List");
+            return RedirectToAction("List", new { orderBy = 1, ascendent = "ASC" });
         }
 
         public ActionResult Delete(int id)
@@ -128,7 +129,7 @@ namespace RentC_MVC.Controllers
             else
             {
                 logic.car.remove(id);
-                return RedirectToAction("List");
+                return RedirectToAction("List", new { orderBy = 1, ascendent = "ASC" });
             }
         }
 
@@ -138,52 +139,28 @@ namespace RentC_MVC.Controllers
             return View(cars);
         }
 
+        
         public ActionResult ListMostRentedByMonth()
         {
             return View();
         }
 
-        [HttpPost]
         public ActionResult ListMostRentedByMonth2(int month, int year)
         {
-            Regex r1 = new Regex("^(0[1-9]|1[0-2]){1}$");
-            if (!r1.IsMatch(month.ToString())) {
-                ModelState.AddModelError("month", "Invalid month.");
-                return View();
-            }
-
-            Regex r2 = new Regex("^(19|20)[0-9]{2}$");
-            if (!r2.IsMatch(year.ToString()))
-            {
-                ModelState.AddModelError("year", "Invalid year.");
-                return View();
-            }
 
             List<Tuple<int, Car>> cars = new List<Tuple<int, Car>>(logic.car.listMostRentedByMonth(month, year));
             return View(cars);
         }
 
+        
         public ActionResult ListLessRentedByMonth()
         {
             return View();
         }
 
-        [HttpPost]
         public ActionResult ListLessRentedByMonth2(int month, int year)
         {
-            Regex r1 = new Regex("^(0[1-9]|1[0-2]){1}$");
-            if (!r1.IsMatch(month.ToString()))
-            {
-                ModelState.AddModelError("month", "Invalid month.");
-                return View();
-            }
-
-            Regex r2 = new Regex("^(19|20)[0-9]{2}$");
-            if (!r2.IsMatch(year.ToString()))
-            {
-                ModelState.AddModelError("year", "Invalid year.");
-                return View();
-            }
+            
             List<Tuple<int, Car>> cars = new List<Tuple<int, Car>>(logic.car.listLessRentedByMonth(month, year));
             return View(cars);
         }

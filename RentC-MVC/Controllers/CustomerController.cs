@@ -54,7 +54,7 @@ namespace RentC_MVC.Controllers
                 return View(customer);
             }
             else {
-                return RedirectToAction("List");
+                return RedirectToAction("List", new { orderBy = 1, ascendent = "ASC" });
             }
         }
 
@@ -87,7 +87,7 @@ namespace RentC_MVC.Controllers
             }
             else
             {
-                return RedirectToAction("List");
+                return RedirectToAction("List", new { orderBy = 1, ascendent = "ASC" });
             }
         }
 
@@ -111,7 +111,7 @@ namespace RentC_MVC.Controllers
             else
             {
                 logic.customer.removeCustomer(id);
-                return RedirectToAction("List");
+                return RedirectToAction("List", new { orderBy = 1, ascendent = "ASC" });
             }
         }
 

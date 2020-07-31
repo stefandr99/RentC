@@ -83,8 +83,8 @@ namespace RentC_MVC.DAL
                     {
                         while (reader.Read())
                         {
-                            Customer customer = new Customer(reader.GetInt32(1), reader.GetString(2), reader.GetDateTime(3),
-                                reader.GetString(4), reader.GetString(5));
+                            Customer customer = new Customer(reader.GetInt32(1), reader.GetString(2),
+                                reader.GetDateTime(3), reader.IsDBNull(4) ? "" : reader.GetString(4), reader.IsDBNull(5) ? "" : reader.GetString(5));
                             gold.Add(new Tuple<int, Customer>(reader.GetInt32(0), customer));
                         }
                     }
@@ -111,8 +111,8 @@ namespace RentC_MVC.DAL
                     {
                         while (reader.Read())
                         {
-                            Customer customer = new Customer(reader.GetInt32(1), reader.GetString(2), reader.GetDateTime(3),
-                                reader.GetString(4), reader.GetString(5));
+                            Customer customer = new Customer(reader.GetInt32(1), reader.GetString(2),
+                                reader.GetDateTime(3), reader.IsDBNull(4) ? "" : reader.GetString(4), reader.IsDBNull(5) ? "" : reader.GetString(5));
                             gold.Add(new Tuple<int, Customer>(reader.GetInt32(0), customer));
                         }
                     }

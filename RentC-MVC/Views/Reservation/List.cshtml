@@ -85,9 +85,6 @@
         <th>
             @Html.DisplayNameFor(model => model.location)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.couponCode)
-        </th>
         <th></th>
     </tr>
 
@@ -119,9 +116,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.location)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.couponCode)
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { CarId = item.carId, CustomerId = item.customerId, StartDate = item.startDate, EndDate = item.endDate }) |

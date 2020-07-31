@@ -48,7 +48,7 @@ namespace RentC_MVC.Controllers
             else
             {
                 logic.user.registerSaleperson(user.username, user.password);
-                return RedirectToAction("List");
+                return RedirectToAction("List", new { orderBy = 1, ascendent = "ASC" });
             }
         }
 

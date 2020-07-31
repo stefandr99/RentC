@@ -16,7 +16,7 @@ namespace RentC_MVC.Repositories
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@password", user.username);
+                command.Parameters.AddWithValue("@username", user.username);
                 command.Parameters.AddWithValue("@password", user.password);
                 command.Parameters.AddWithValue("@enabled", true);
                 command.Parameters.AddWithValue("@roleId", 3);
@@ -103,11 +103,11 @@ namespace RentC_MVC.Repositories
             string query;
             if (criteria.Equals("UserID") || criteria.Equals("RoleID"))
             {
-                query = "SELECT * FROM Customers WHERE " + criteria + " = " + search + "";
+                query = "SELECT * FROM Users WHERE " + criteria + " = " + search + "";
             }
             else
             {
-                query = "SELECT * FROM Customers WHERE " + criteria + " LIKE '%" + search + "%'";
+                query = "SELECT * FROM Users WHERE " + criteria + " LIKE '%" + search + "%'";
             }
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))

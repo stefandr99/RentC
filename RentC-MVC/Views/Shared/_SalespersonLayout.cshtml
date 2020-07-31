@@ -46,7 +46,7 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("Change Password", "ChangePass", "User", new { id = int.TryParse(HttpContext.Current.Session["userId"].ToString(), out _) }, "")</li>
+                    <li>@Html.ActionLink("Change Password", "ChangePass", "User", new { id = int.TryParse(HttpContext.Current.Session["userId"].ToString(), out int nr) ? nr : 0 }, "")</li>
                     <li>@Html.ActionLink("Logout", "Logout", "User")</li>
                 </ul>
             </div>

@@ -73,7 +73,7 @@ namespace RentC_MVC.Controllers
             }
             else
             {
-                return RedirectToAction("List");
+                return RedirectToAction("List",  new { orderBy = 1, ascendent = "ASC" } );
             }
         }
 
@@ -101,7 +101,7 @@ namespace RentC_MVC.Controllers
                 return View(reservationToEdit);
             }
 
-            return RedirectToAction("List");
+            return RedirectToAction("List", new { orderBy = 1, ascendent = "ASC" });
         }
 
         public ActionResult Delete(int carId, int customerId, DateTime startDate, DateTime endDate)
@@ -124,7 +124,7 @@ namespace RentC_MVC.Controllers
             else
             {
                 logic.reservation.cancelReservation(carId, customerId, startDate, endDate);
-                return RedirectToAction("List");
+                return RedirectToAction("List", new { orderBy = 1, ascendent = "ASC" });
             }
         }
 

@@ -91,7 +91,7 @@ namespace RentC_MVC.DAL
 
         public bool remove(int carId, int customerId, DateTime startDate, DateTime endDate, DbConnection db)
         {
-            string query = "UPDATE Reservation SET ReservStatsID = 3 where CarID = @carId AND CustomerID = @customerId AND " +
+            string query = "UPDATE Reservations SET ReservStatsID = 3 where CarID = @carId AND CustomerID = @customerId AND " +
                            "StartDate = @sdate AND EndDate = @edate";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))

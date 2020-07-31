@@ -2,6 +2,7 @@
 using RentC_MVC.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,9 @@ namespace RentC_MVC.Repositories
                 if (!reservation.couponCode.Equals(""))
                     command.Parameters.AddWithValue("@couponCode", reservation.couponCode);
 
-                db.getDbConnection().Open();
+                if (db.getDbConnection().State == ConnectionState.Closed) {
+                    db.getDbConnection().Open();
+                }
                 int result = command.ExecuteNonQuery();
                 db.getDbConnection().Close();
 
@@ -56,7 +59,7 @@ namespace RentC_MVC.Repositories
         }
 
         public List<Reservation> list(int orderBy, string ascendent, DbConnection db) {
-            string query = "SELECT * FROM Reservations where ReservStatsID = 1 ORDER BY " + orderBy + " " + ascendent;
+            string query = "SELECT * FROM Reservations ORDER BY 3 " + ascendent;
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection())) {
                 db.getDbConnection().Open();
@@ -64,7 +67,7 @@ namespace RentC_MVC.Repositories
                     List<Reservation> reservations = new List<Reservation>();
                     if (reader.HasRows) {
                         while (reader.Read()) {
-                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1),
+                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1), reader.GetByte(2),
                                 reader.GetDateTime(3), reader.GetDateTime(4), reader.GetString(5));
                             reservations.Add(reservation);
                         }
@@ -107,7 +110,7 @@ namespace RentC_MVC.Repositories
                     {
                         if (reader.Read())
                         {
-                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1),
+                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1), reader.GetByte(2),
                                 reader.GetDateTime(3), reader.GetDateTime(4), reader.GetString(5));
                             db.getDbConnection().Close();
                             return reservation;
@@ -124,11 +127,11 @@ namespace RentC_MVC.Repositories
             string query;
             if (criteria.Equals("CustomerID") || criteria.Equals("CarID"))
             {
-                query = "SELECT * FROM Customers WHERE " + criteria + " = " + search + "";
+                query = "SELECT * FROM Reservations WHERE " + criteria + " = " + search + "";
             }
             else
             {
-                query = "SELECT * FROM Customers WHERE " + criteria + " LIKE '%" + search + "%'";
+                query = "SELECT * FROM Reservations WHERE " + criteria + " LIKE '%" + search + "%'";
             }
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
@@ -141,7 +144,7 @@ namespace RentC_MVC.Repositories
                     {
                         while (reader.Read())
                         {
-                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1),
+                            Reservation reservation = new Reservation(reader.GetInt32(0), reader.GetInt32(1), reader.GetByte(2),
                                 reader.GetDateTime(3), reader.GetDateTime(4), reader.GetString(5));
                             reservations.Add(reservation);
                         }

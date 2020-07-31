@@ -14,15 +14,18 @@ namespace RentC_MVC.Repositories
         {
             string query = "SELECT TOP 1 c.CouponCode FROM Coupons c LEFT JOIN Reservations r " +
                 "ON c.CouponCode = r.CouponCode ORDER BY NEWID()";
-            db.getDbConnection().Open();
+            
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
+                db.getDbConnection().Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.Read())
                     {
+                        db.getDbConnection().Close();
                         return reader.GetString(0);
                     }
+                    db.getDbConnection().Close();
                     return "";
                 }
             }

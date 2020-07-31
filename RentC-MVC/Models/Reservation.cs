@@ -53,6 +53,22 @@ namespace RentC_MVC.Models
             this.location = location;
         }
 
+        public Reservation(System.DateTime startDate, System.DateTime endDate)
+        {
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
+        public Reservation(int carId, int customerId, byte reservationStats, System.DateTime startDate, System.DateTime endDate, string location)
+        {
+            this.carId = carId;
+            this.customerId = customerId;
+            this.reservStatsId = reservationStats;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.location = location;
+        }
+
         public Reservation(int carId, int customerId, System.DateTime startDate, System.DateTime endDate) {
             this.carId = carId;
             this.customerId = customerId;
