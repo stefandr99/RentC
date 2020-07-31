@@ -16,9 +16,9 @@ namespace RentC.Presentation
     {
         private Logic logic { get; }
         private Response response { get; set; }
-        private int previous = 0;
-        private int current = 0;
-        private string order;
+        private int previous;
+        private int current = -1;
+        private string order = "ASC";
         public UserInteraction() {
             logic = new Logic();
         }
@@ -168,10 +168,19 @@ namespace RentC.Presentation
         }
 
         public void cancelReservation() {
-            Console.Write("Car Id OR Customer Id: ");
-            string id = Console.ReadLine();
+            Console.Write("Car Id: ");
+            string carId = Console.ReadLine();
 
-            response = logic.reservation.cancelReservation(id);
+            Console.Write("Customer Id: ");
+            string customerId = Console.ReadLine();
+
+            Console.Write("Start Date: ");
+            string start = Console.ReadLine();
+
+            Console.Write("End Date: ");
+            string end = Console.ReadLine();
+
+            response = logic.reservation.cancelReservation(carId, customerId, start, end);
             if (response == Response.SUCCESS)
                 Console.WriteLine("Reservation canceled with success.");
             else getMessage(response);
@@ -184,7 +193,9 @@ namespace RentC.Presentation
                 Console.Write("Username: ");
                 string username = Console.ReadLine();
                 Console.Write("Password: ");
+                Console.ForegroundColor = ConsoleColor.Black;
                 string pass = Console.ReadLine();
+                Console.ForegroundColor = ConsoleColor.Gray;
 
                 response = logic.user.authUser(username, pass);
 
@@ -290,7 +301,17 @@ namespace RentC.Presentation
                     Console.WriteLine("This hasn't been an option.");
                 }
                 else if (answer < info.Length) {
-                    if(type.FullName.Contains("Customer"))
+                    if (current == -1) {
+                        current = 0;
+                    }
+                    else {
+                        previous = current;
+                        current = answer;
+                    }
+                        
+                    order = (current == previous) ? "DESC" : "ASC";
+
+                    if (type.FullName.Contains("Customer"))
                         printList(logic.customer.list(answer + 1, order));
                     else if(type.FullName.Contains("Car")) {
                         printList(logic.car.listAvailable(answer + 1, order));
@@ -389,9 +410,6 @@ namespace RentC.Presentation
             mainMenu: ;
         }
 
-        /**
-         * De implementat si update car
-         */
         public void adminSession()
         {
             while (true) {
@@ -412,100 +430,75 @@ namespace RentC.Presentation
                 string respLine = Console.ReadLine();
                 switch (respLine) {
                     case "1": {
-                        current = 1;
                         registerCustomer();
                         break;
                     }
                     case "2": {
-                        current = 2;
                         updateCustomer();
                         break;
                     }
                     case "3": {
-                        current = 3;
                         removeCustomer();
                         break;
                     }
                     case "4": {
-                        current = 4;
                         registerReservation();
                         break;
                     }
                     case "5": {
-                        current = 5;
                         updateReservation();
                         break;
                     }
                     case "6": {
-                        current = 6;
                         cancelReservation();
                         break;
                     }
                     case "7": {
-                        current = 7;
                         registerCar();
                         break;
                     }
                     case "8": {
-                        current = 8;
                         removeCar();
                         break;
                     }
                     case "9": {
-                        if (current != 0)
-                            previous = current;
-                        current = 9;
-                        order = current == previous ? "DESC" : "ASC";
-                        printList(logic.customer.list(1, order));
+                        current = -1;
+                        printList(logic.customer.list(1, "ASC"));
                         break;
                     }
                     case "10": {
-                        if (current != 0)
-                            previous = current;
-                        current = 10;
-                        order = current == previous ? "DESC" : "ASC";
-                        printList(logic.reservation.list(1, order));
+                        current = -1;
+                        printList(logic.reservation.list(1, "ASC"));
                         break;
                     }
                     case "11": {
-                        if (current != 0)
-                            previous = current;
-                        current = 11;
-                        order = current == previous ? "DESC" : "ASC";
-                        printList(logic.car.listAvailable(1, order));
+                        current = -1;
+                        printList(logic.car.listAvailable(1, "ASC"));
                         break;
                     }
                     case "12":
                     {
-                        if (current != 0)
-                            previous = current;
-                        current = 12;
-                        order = current == previous ? "DESC" : "ASC";
+                        current = -1;
                         printList(logic.user.list(1, order));
                         break;
                     }
                     case "13": {
-                        current = 13;
                         changePassword();
                         break;
                     }
                     case "14": {
-                        current = 14;
                         registerSaleperson();
                         break;
                     }
                     case "15": {
-                        current = 15;
                         disableUser();
                         break;
                     }
                     case "16": {
-                        current = 16;
                         enableUser();
                         break;
                     }
                     case "17": {
-                        current = 17;
                         specialStatistics();
                         break;
                     }
@@ -514,7 +507,6 @@ namespace RentC.Presentation
                         break;
                     }
                     default: {
-                        current = 0;
                         Console.WriteLine("This is not a valid option.");
                         break;
                     }
@@ -541,71 +533,53 @@ namespace RentC.Presentation
                 switch (respLine)
                 {
                     case "1": {
-                        current = 1;
                         registerCustomer();
                         break;
                     }
                     case "2": {
-                        current = 2;
                         updateCustomer();
                         break;
                     }
                     case "3": {
-                        current = 3;
                         removeCustomer();
                         break;
                     }
                     case "4": {
-                        current = 4;
                         registerReservation();
                         break;
                     }
                     case "5": {
-                        current = 5;
                         updateReservation();
                         break;
                     }
                     case "6": {
-                        current = 6;
                         cancelReservation();
                         break;
                     }
                     case "7": {
-                        current = 7;
                         registerCar();
                         break;
                     }
                     case "8": {
-                        current = 8;
                         removeCar();
                         break;
                     }
                     case "9": {
-                        if (current != 0)
-                            previous = current;
-                        current = 9;
-                        order = current == previous ? "DESC" : "ASC";
-                        printList(logic.customer.list(1, order));
+                        current = -1;
+                        printList(logic.customer.list(1, "ASC"));
                         break;
                     }
                     case "10": {
-                        if (current != 0)
-                            previous = current;
-                        current = 10;
-                        order = current == previous ? "DESC" : "ASC";
-                        printList(logic.reservation.list(1, order));
+                        current = -1;
+                        printList(logic.reservation.list(1, "ASC"));
                         break;
                     }
                     case "11": {
-                        if (current != 0)
-                            previous = current;
-                        current = 11;
-                        order = current == previous ? "DESC" : "ASC";
-                        printList(logic.car.listAvailable(1, order));
+                        current = -1;
+                        printList(logic.car.listAvailable(1, "ASC"));
                         break;
                     }
                     case "12": {
-                        current = 12;
                         changePassword();
                         break;
                     }
@@ -614,7 +588,6 @@ namespace RentC.Presentation
                         break;
                     }
                     default: {
-                        current = 0;
                         Console.WriteLine("This is not a valid option.");
                         break;
                     }
@@ -635,25 +608,19 @@ namespace RentC.Presentation
                 switch (respLine)
                 {
                     case "1": {
-                        current = 1;
                         registerReservation();
                         break;
                     }
                     case "2": {
-                        current = 2;
                         updateReservation();
                         break;
                     }
                     case "3": {
-                        if (current != 0)
-                            previous = current;
-                        current = 3;
-                        order = current == previous ? "DESC" : "ASC";
-                        printList(logic.reservation.list(1, order));
+                        current = -1;
+                        printList(logic.reservation.list(1, "ASC"));
                         break;
                     }
                     case "4": {
-                        current = 4;
                         changePassword();
                         break;
                     }
@@ -662,7 +629,6 @@ namespace RentC.Presentation
                         break;
                     }
                     default: {
-                        current = 0;
                         Console.WriteLine("This is not a valid option.");
                         break;
                     }

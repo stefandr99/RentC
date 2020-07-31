@@ -73,6 +73,32 @@ namespace RentC.DAL
             }
         }
 
+        public bool verifyReservation2(int carId, int customerId, DateTime startDate, DateTime endDate, DbConnection db)
+        {
+            string query = "SELECT CustomerID FROM Reservations r WHERE CarID = @carId AND CustomerID = @customerId AND StartDate = @start AND EndDate = @end " +
+                           "and ReservStatsID = 1";
+
+            using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
+            {
+                command.Parameters.AddWithValue("@carId", carId);
+                command.Parameters.AddWithValue("@customerId", customerId);
+                command.Parameters.AddWithValue("@start", startDate);
+                command.Parameters.AddWithValue("@end", endDate);
+                db.getDbConnection().Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+
+                    if (reader.HasRows)
+                    {
+                        db.getDbConnection().Close();
+                        return true;
+                    }
+                    db.getDbConnection().Close();
+                    return false;
+                }
+            }
+        }
+
         public List<Reservation> list(int orderBy, string ascendent, DbConnection db) {
             string query = "SELECT * FROM Reservations where ReservStatsID = 1 ORDER BY " + orderBy + " " + ascendent;
 
@@ -97,12 +123,16 @@ namespace RentC.DAL
         /**
          * Could change status depending of CarID or CustomerID
          */
-        public bool remove(int identifyId,  DbConnection db) {
-            string query = "UPDATE Reservation SET ReservStatsID = 3 where CarID = @id OR CustomerID = @id";
+        public bool remove(int carId, int customerId, DateTime startDate, DateTime endDate,  DbConnection db) {
+            string query = "UPDATE Reservations SET ReservStatsID = 3 where CarID = @carId AND CustomerID = @customerId AND " +
+                           "StartDate = @start AND EndDate = @end";
 
             using (SqlCommand command = new SqlCommand(query, db.getDbConnection()))
             {
-                command.Parameters.AddWithValue("@id", identifyId);
+                command.Parameters.AddWithValue("@carId", carId);
+                command.Parameters.AddWithValue("@customerId", customerId);
+                command.Parameters.AddWithValue("@start", startDate);
+                command.Parameters.AddWithValue("@end", endDate);
 
                 db.getDbConnection().Open();
                 bool result = command.ExecuteNonQuery() > 0;
@@ -141,8 +171,8 @@ namespace RentC.DAL
                     {
                         while (reader.Read())
                         {
-                            Customer customer = new Customer(reader.GetInt32(1), reader.GetString(2), reader.GetDateTime(3),
-                                reader.GetString(4), reader.GetString(5));
+                            Customer customer = new Customer(reader.GetInt32(1), reader.GetString(2),
+                                reader.GetDateTime(3), reader.IsDBNull(4) ? "" : reader.GetString(4), reader.IsDBNull(5) ? "" : reader.GetString(5));
                             gold.Add(new Tuple<int, Customer>(reader.GetInt32(0), customer));
                         }
                     }
@@ -169,8 +199,8 @@ namespace RentC.DAL
                     {
                         while (reader.Read())
                         {
-                            Customer customer = new Customer(reader.GetInt32(1), reader.GetString(2), reader.GetDateTime(3),
-                                reader.GetString(4), reader.GetString(5));
+                            Customer customer = new Customer(reader.GetInt32(1), reader.GetString(2),
+                                reader.GetDateTime(3), reader.IsDBNull(4) ? "" : reader.GetString(4), reader.IsDBNull(5) ? "" : reader.GetString(5));
                             gold.Add(new Tuple<int, Customer>(reader.GetInt32(0), customer));
                         }
                     }

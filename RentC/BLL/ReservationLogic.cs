@@ -98,13 +98,24 @@ namespace RentC.BLL
             return reservationData.list(orderBy, ascendent, db);
         }
 
-        public Response cancelReservation(string identifyId) {
-            if (!int.TryParse(identifyId, out int id))
+        public Response cancelReservation(string carId, string customerId, string startDate, string endDate) {
+            if (!int.TryParse(carId, out int car))
+                return Response.INCORRECT_ID;
+            if (!int.TryParse(customerId, out int customer))
                 return Response.INCORRECT_ID;
 
-            if (!reservationData.verifyReservation(id, db))
+            string format = "dd/MM/yyyy";
+            DateTime sDate, eDate;
+            if (!DateTime.TryParseExact(startDate, format, new CultureInfo("en-US"),
+                DateTimeStyles.None, out sDate))
+                return Response.INVALID_DATE;
+            if (!DateTime.TryParseExact(endDate, format, new CultureInfo("en-US"),
+                DateTimeStyles.None, out eDate))
+                return Response.INVALID_DATE;
+
+            if (!reservationData.verifyReservation2(car, customer, sDate, eDate, db))
                 return Response.INEXISTENT_RESERVATION;
-            if (!reservationData.remove(id, db))
+            if (!reservationData.remove(car, customer, sDate, eDate, db))
                 return Response.DATABASE_ERROR;
             return Response.SUCCESS;
         }
